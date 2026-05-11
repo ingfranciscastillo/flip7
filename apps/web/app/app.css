@@ -19,7 +19,9 @@
   --shadow-glow: 0 10px 40px -10px rgba(255, 91, 138, 0.5);
   --shadow-card: 0 4px 18px rgba(0, 0, 0, 0.4);
 
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Bangers', cursive;
+  --font-body: 'Fredoka', sans-serif;
+  --font-sans: 'Fredoka', system-ui, sans-serif;
 }
 
 :root {
@@ -78,4 +80,14 @@ body {
 
 @utility pill {
   @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold;
+}
+
+@utility font-display {
+  font-family: var(--font-display);
+  letter-spacing: 0.05em;
+}
+
+@utility font-body {
+  font-family: var(--font-body);
+  font-weight: 400;
 }
