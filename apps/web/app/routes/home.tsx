@@ -96,12 +96,12 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md card-surface p-8 space-y-10"
+          className="w-full max-w-md card-surface p-8 space-y-8"
         >
           <div className="space-y-4">
             <label className="text-sm text-muted">Tu nombre</label>
             <input
-              className="input"
+              className="input mt-2"
               placeholder="Tu nombre"
               value={name}
               maxLength={20}

@@ -55,7 +55,7 @@ export function AvatarSelector({ value, onChange }: AvatarSelectorProps) {
     <div
       role="listbox"
       aria-label="Seleccionar avatar"
-      className="grid grid-cols-6 gap-2"
+      className="grid grid-cols-6 gap-2 mt-2"
       suppressHydrationWarning
     >
       {EMOJIS.map((emoji) => (

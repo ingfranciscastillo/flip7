@@ -1,6 +1,9 @@
 import { Link } from 'react-router';
 import { motion } from 'motion/react';
-import { ArrowLeft01FreeIcons } from '@hugeicons/core-free-icons';
+import {
+  ArrowLeft01FreeIcons,
+  ArrowLeft02FreeIcons,
+} from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 
 function StatBadge({ value, label }: { value: string; label: string }) {
@@ -159,7 +162,7 @@ export default function HowToPlay() {
             className="flex items-center gap-2 text-muted hover:text-ink transition group"
           >
             <span className="w-8 h-8 rounded-lg bg-surface2 border border-border flex items-center justify-center group-hover:bg-primary/10 transition">
-              <HugeiconsIcon icon={ArrowLeft01FreeIcons} />
+              <HugeiconsIcon icon={ArrowLeft02FreeIcons} />
             </span>
 
             <span className="font-medium">Volver</span>
