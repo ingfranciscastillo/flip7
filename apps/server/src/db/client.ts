@@ -1,6 +1,7 @@
 import "dotenv/config";
 
-import { drizzle } from "drizzle-orm/neon-http";
+import { neon } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-http';
 
 import * as schema from "./schema";
 import { env } from "../env";
@@ -9,6 +10,7 @@ if (!env.DATABASE_URL) {
   throw new Error("DATABASE_URL is missing");
 }
 
-export const db = drizzle(env.DATABASE_URL);
+const sql = neon(env.DATABASE_URL)
+export const db = drizzle({client: sql});
 
 export {schema}
