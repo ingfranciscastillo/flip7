@@ -1,0 +1,27 @@
+{
+  "name": "flip7",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "bun run --filter './packages/*' build && bun run --filter './apps/*' build",
+    "dev:web": "bun run --cwd apps/web dev",
+    "dev:server": "bun run --cwd apps/server dev",
+    "test": "bun run --cwd packages/game-engine test",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@types/node": "^25.6.2",
+    "eslint": "^10.3.0",
+    "prettier": "^3.8.3",
+    "typescript": "^6.0.3",
+    "@types/bun": "latest"
+  },
+  "dependencies": {
+    "postgres": "^3.4.9"
+  }
+}
