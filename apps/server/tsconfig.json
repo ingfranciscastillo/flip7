@@ -1,12 +1,14 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     // Environment setup & latest features
+    "outDir": "dist",
     "lib": ["ESNext"],
-    "target": "ESNext",
-    "module": "Preserve",
+    "module": "esnext",
     "moduleDetection": "force",
     "jsx": "react-jsx",
     "allowJs": true,
+    "types": ["node"],
 
     // Bundler mode
     "moduleResolution": "bundler",
@@ -25,5 +27,7 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noPropertyAccessFromIndexSignature": false
-  }
+  },
+
+  "include": ["src", "../../packages/shared/src", "../../packages/game-engine/src"]
 }
