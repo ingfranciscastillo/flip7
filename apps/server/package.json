@@ -23,8 +23,8 @@
     "typescript": "^6.0.3"
   },
   "dependencies": {
-    "@flip7/game-engine": "workspace:*",
-    "@flip7/shared": "workspace:*",
+    "@flip7/game-engine": "link:@flip7/game-engine",
+    "@flip7/shared": "link:@flip7/shared",
     "@neondatabase/serverless": "^1.1.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
@@ -32,5 +32,8 @@
     "express": "^5.2.1",
     "socket.io": "^4.8.3",
     "zod": "^4.4.3"
+  },
+  "packageManager": {
+    "name": "bun"
   }
 }

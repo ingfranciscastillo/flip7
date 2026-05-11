@@ -29,7 +29,13 @@ const statusLabel: Record<PlayerPublic['status'], string> = {
   disconnected: 'Offline',
 };
 
-export function PlayerSeat({ player, isCurrentTurn, isMe, selectable, onClick }: Props) {
+export function PlayerSeat({
+  player,
+  isCurrentTurn,
+  isMe,
+  selectable,
+  onClick,
+}: Props) {
   return (
     <motion.button
       layout
@@ -47,7 +53,9 @@ export function PlayerSeat({ player, isCurrentTurn, isMe, selectable, onClick }:
         <div className="flex-1 min-w-0">
           <div className="font-bold truncate flex items-center gap-2">
             {player.name}
-            {player.isHost && <span className="pill bg-gold/30 text-gold">HOST</span>}
+            {player.isHost && (
+              <span className="pill bg-gold/30 text-gold">HOST</span>
+            )}
             {isMe && <span className="pill bg-accent/30 text-accent">TÚ</span>}
           </div>
           <div className="text-xs text-muted">{player.totalScore} pts</div>

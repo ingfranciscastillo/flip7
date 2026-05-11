@@ -70,9 +70,14 @@ export function Card({ card, faceDown, small, highlight }: Props) {
   }
 
   // action
-  const label = card.action === 'freeze' ? '❄️' : card.action === 'flip3' ? '🔁' : '🛟';
+  const label =
+    card.action === 'freeze' ? '❄️' : card.action === 'flip3' ? '🔁' : '🛟';
   const sub =
-    card.action === 'freeze' ? 'Freeze' : card.action === 'flip3' ? 'Flip 3' : '2nd Chance';
+    card.action === 'freeze'
+      ? 'Freeze'
+      : card.action === 'flip3'
+        ? 'Flip 3'
+        : '2nd Chance';
   return (
     <motion.div
       layout

@@ -19,7 +19,12 @@ export type EngineEvent =
   | { type: 'turn_changed'; playerId: string }
   | { type: 'round_ended'; round: number; scores: Record<string, number> }
   | { type: 'game_ended'; winnerId: string }
-  | { type: 'pending_target'; sourcePlayerId: string; cardId: string; action: 'freeze' | 'flip3' };
+  | {
+      type: 'pending_target';
+      sourcePlayerId: string;
+      cardId: string;
+      action: 'freeze' | 'flip3';
+    };
 
 export interface PlayerInternal {
   id: string;
@@ -59,9 +64,14 @@ export class GameEngine {
   }
 
   // -------- Lobby --------
-  addPlayer(p: { id: string; name: string; emoji: string }): { ok: boolean; error?: string } {
-    if (this.phase !== 'lobby') return { ok: false, error: 'Game already started' };
-    if (this.players.length >= MAX_PLAYERS) return { ok: false, error: 'Room full' };
+  addPlayer(p: { id: string; name: string; emoji: string }): {
+    ok: boolean;
+    error?: string;
+  } {
+    if (this.phase !== 'lobby')
+      return { ok: false, error: 'Game already started' };
+    if (this.players.length >= MAX_PLAYERS)
+      return { ok: false, error: 'Room full' };
     if (this.players.some((x) => x.id === p.id)) return { ok: true };
     const isHost = this.players.length === 0;
     this.players.push({
@@ -95,15 +105,18 @@ export class GameEngine {
 
   // -------- Round / Game --------
   startGame(byPlayerId: string): { ok: boolean; error?: string } {
-    if (byPlayerId !== this.hostId) return { ok: false, error: 'Only host can start' };
+    if (byPlayerId !== this.hostId)
+      return { ok: false, error: 'Only host can start' };
     if (this.phase !== 'lobby') return { ok: false, error: 'Already started' };
-    if (this.players.length < MIN_PLAYERS) return { ok: false, error: `Need ${MIN_PLAYERS}+ players` };
+    if (this.players.length < MIN_PLAYERS)
+      return { ok: false, error: `Need ${MIN_PLAYERS}+ players` };
     this.startRound();
     return { ok: true };
   }
 
   resetGame(byPlayerId: string): { ok: boolean; error?: string } {
-    if (byPlayerId !== this.hostId) return { ok: false, error: 'Only host can reset' };
+    if (byPlayerId !== this.hostId)
+      return { ok: false, error: 'Only host can reset' };
     this.phase = 'lobby';
     this.winnerId = null;
     this.round = 0;
@@ -180,7 +193,11 @@ export class GameEngine {
   }
 
   /** Resolve a pending action target (freeze / flip3) */
-  applyTarget(sourceId: string, cardId: string, targetId: string): EngineEvent[] {
+  applyTarget(
+    sourceId: string,
+    cardId: string,
+    targetId: string,
+  ): EngineEvent[] {
     const events: EngineEvent[] = [];
     if (!this.pendingTarget) return events;
     if (
@@ -235,7 +252,9 @@ export class GameEngine {
     events.push({ type: 'card_dealt', playerId: p.id, card });
 
     if (card.kind === 'number') {
-      const dup = p.hand.some((c) => c.kind === 'number' && c.value === card.value);
+      const dup = p.hand.some(
+        (c) => c.kind === 'number' && c.value === card.value,
+      );
       if (dup) {
         if (p.hasSecondChance) {
           p.hasSecondChance = false;
@@ -279,7 +298,9 @@ export class GameEngine {
       } else {
         // freeze / flip3 → require target. Can target self.
         // If only one active player remains (self), auto-target self
-        const activeCount = this.players.filter((x) => x.status === 'active').length;
+        const activeCount = this.players.filter(
+          (x) => x.status === 'active',
+        ).length;
         if (activeCount <= 1) {
           // target self
           this.discard.push(card);
@@ -367,7 +388,9 @@ export class GameEngine {
     events.push({ type: 'round_ended', round: this.round, scores });
 
     // game-end check
-    const winner = [...this.players].sort((a, b) => b.totalScore - a.totalScore)[0];
+    const winner = [...this.players].sort(
+      (a, b) => b.totalScore - a.totalScore,
+    )[0];
     if (winner && winner.totalScore >= TARGET_SCORE) {
       this.phase = 'game_end';
       this.winnerId = winner.id;

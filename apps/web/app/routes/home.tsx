@@ -8,9 +8,24 @@ import { useIdentity } from '../store/gameStore';
 type RoomCreateResponse =
   | { ok: true; roomCode: string; playerId: string }
   | { ok: false; error: string };
-type RoomJoinResponse = { ok: true; playerId: string } | { ok: false; error: string };
+type RoomJoinResponse =
+  | { ok: true; playerId: string }
+  | { ok: false; error: string };
 
-const EMOJIS = ['🦊', '🐼', '🐧', '🐸', '🦁', '🐙', '🦄', '🐲', '🐵', '🐯', '🐨', '🦉'];
+const EMOJIS = [
+  '🦊',
+  '🐼',
+  '🐧',
+  '🐸',
+  '🦁',
+  '🐙',
+  '🦄',
+  '🐲',
+  '🐵',
+  '🐯',
+  '🐨',
+  '🦉',
+];
 
 export default function Home() {
   const navigate = useNavigate();
@@ -34,12 +49,16 @@ export default function Home() {
     const n = ensureProfile();
     if (!n) return;
     setLoading(true);
-    getSocket().emit('room:create', { name: n, emoji }, (res: RoomCreateResponse) => {
-      setLoading(false);
-      if (!res.ok) return toast.error(res.error);
-      profile.setIdentity({ playerId: res.playerId, roomCode: res.roomCode });
-      navigate(`/lobby/${res.roomCode}`);
-    });
+    getSocket().emit(
+      'room:create',
+      { name: n, emoji },
+      (res: RoomCreateResponse) => {
+        setLoading(false);
+        if (!res.ok) return toast.error(res.error);
+        profile.setIdentity({ playerId: res.playerId, roomCode: res.roomCode });
+        navigate(`/lobby/${res.roomCode}`);
+      },
+    );
   };
 
   const join = () => {
@@ -48,12 +67,16 @@ export default function Home() {
     const c = code.trim().toUpperCase();
     if (c.length !== 6) return toast.error('Código inválido');
     setLoading(true);
-    getSocket().emit('room:join', { code: c, name: n, emoji }, (res: RoomJoinResponse) => {
-      setLoading(false);
-      if (!res.ok) return toast.error(res.error);
-      profile.setIdentity({ playerId: res.playerId, roomCode: c });
-      navigate(`/lobby/${c}`);
-    });
+    getSocket().emit(
+      'room:join',
+      { code: c, name: n, emoji },
+      (res: RoomJoinResponse) => {
+        setLoading(false);
+        if (!res.ok) return toast.error(res.error);
+        profile.setIdentity({ playerId: res.playerId, roomCode: c });
+        navigate(`/lobby/${c}`);
+      },
+    );
   };
 
   return (
@@ -89,7 +112,9 @@ export default function Home() {
                 key={e}
                 onClick={() => setEmoji(e)}
                 className={`aspect-square rounded-xl text-2xl border transition ${
-                  emoji === e ? 'border-primary bg-primary/10' : 'border-border bg-surface2'
+                  emoji === e
+                    ? 'border-primary bg-primary/10'
+                    : 'border-border bg-surface2'
                 }`}
               >
                 {e}
@@ -98,7 +123,11 @@ export default function Home() {
           </div>
         </div>
 
-        <button className="btn-primary w-full" disabled={loading} onClick={create}>
+        <button
+          className="btn-primary w-full"
+          disabled={loading}
+          onClick={create}
+        >
           Crear sala
         </button>
 

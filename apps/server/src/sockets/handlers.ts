@@ -24,7 +24,10 @@ function emitEngineEvents(io: IO, code: string, events: EngineEvent[]) {
   for (const ev of events) {
     switch (ev.type) {
       case 'card_dealt':
-        io.to(code).emit('card:dealt', { playerId: ev.playerId, card: ev.card });
+        io.to(code).emit('card:dealt', {
+          playerId: ev.playerId,
+          card: ev.card,
+        });
         break;
       case 'busted':
         io.to(code).emit('player:busted', ev.playerId);
@@ -114,7 +117,9 @@ export function registerHandlers(io: IO, socket: S) {
     if (!parsed.success) return ack({ ok: false, error: 'invalid_payload' });
     const room = manager.get(parsed.data.code);
     if (!room) return ack({ ok: false, error: 'room_not_found' });
-    const player = room.engine.players.find((p) => p.id === parsed.data.playerId);
+    const player = room.engine.players.find(
+      (p) => p.id === parsed.data.playerId,
+    );
     if (!player) return ack({ ok: false, error: 'player_not_found' });
     // swap socket
     const oldSocketId = room.socketByPlayer.get(player.id);
@@ -155,7 +160,11 @@ export function registerHandlers(io: IO, socket: S) {
       return;
     }
     const r = room.engine.startGame(currentPlayer);
-    if (!r.ok) return socket.emit('error', { code: 'start_failed', message: r.error ?? 'failed' });
+    if (!r.ok)
+      return socket.emit('error', {
+        code: 'start_failed',
+        message: r.error ?? 'failed',
+      });
     io.to(currentRoom).emit('game:started');
     const cur = room.engine.toRoomState().currentTurnPlayerId;
     if (cur) io.to(currentRoom).emit('turn:changed', cur);

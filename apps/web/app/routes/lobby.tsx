@@ -30,13 +30,18 @@ export default function Lobby() {
       <div className="card-surface p-6 space-y-5">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs text-muted uppercase tracking-wider">Código de sala</p>
+            <p className="text-xs text-muted uppercase tracking-wider">
+              Código de sala
+            </p>
             <button
               onClick={copy}
               className="flex items-center gap-2 text-3xl font-black tracking-widest"
             >
               {code}
-              <HugeiconsIcon icon={Copy01FreeIcons} className="w-5 h-5 text-muted" />
+              <HugeiconsIcon
+                icon={Copy01FreeIcons}
+                className="w-5 h-5 text-muted"
+              />
             </button>
           </div>
           <span className="pill bg-accent/20 text-accent">
@@ -58,16 +63,26 @@ export default function Lobby() {
               >
                 <span className="text-2xl">{p.emoji}</span>
                 <span className="flex-1 font-semibold">{p.name}</span>
-                {p.isHost && <span className="pill bg-gold/30 text-gold">HOST</span>}
-                {p.id === me.playerId && <span className="pill bg-accent/30 text-accent">TÚ</span>}
-                {!p.connected && <span className="pill bg-muted/30 text-muted">Offline</span>}
+                {p.isHost && (
+                  <span className="pill bg-gold/30 text-gold">HOST</span>
+                )}
+                {p.id === me.playerId && (
+                  <span className="pill bg-accent/30 text-accent">TÚ</span>
+                )}
+                {!p.connected && (
+                  <span className="pill bg-muted/30 text-muted">Offline</span>
+                )}
               </motion.div>
             ))}
           </AnimatePresence>
         </div>
 
         {isHost ? (
-          <button className="btn-primary w-full" onClick={start} disabled={!enoughPlayers}>
+          <button
+            className="btn-primary w-full"
+            onClick={start}
+            disabled={!enoughPlayers}
+          >
             {enoughPlayers ? 'Empezar partida' : 'Mínimo 3 jugadores'}
           </button>
         ) : (

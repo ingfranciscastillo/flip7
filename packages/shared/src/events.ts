@@ -20,7 +20,11 @@ export const ModifierCardSchema = z.object({
 });
 export const ActionCardSchema = z.object({
   kind: z.literal('action'),
-  action: z.union([z.literal('freeze'), z.literal('flip3'), z.literal('second_chance')]),
+  action: z.union([
+    z.literal('freeze'),
+    z.literal('flip3'),
+    z.literal('second_chance'),
+  ]),
   id: z.string(),
 });
 export const CardSchema = z.discriminatedUnion('kind', [
@@ -119,12 +123,16 @@ export interface ClientToServerEvents {
   'room:create': (
     payload: z.infer<typeof RoomCreateSchema>,
     ack: (
-      res: { ok: true; roomCode: string; playerId: string } | { ok: false; error: string },
+      res:
+        | { ok: true; roomCode: string; playerId: string }
+        | { ok: false; error: string },
     ) => void,
   ) => void;
   'room:join': (
     payload: z.infer<typeof RoomJoinSchema>,
-    ack: (res: { ok: true; playerId: string } | { ok: false; error: string }) => void,
+    ack: (
+      res: { ok: true; playerId: string } | { ok: false; error: string },
+    ) => void,
   ) => void;
   'room:rejoin': (
     payload: z.infer<typeof RoomRejoinSchema>,
@@ -147,7 +155,10 @@ export interface ServerToClientEvents {
   'player:stayed': (playerId: string) => void;
   'player:frozen': (playerId: string) => void;
   'player:flip7': (playerId: string) => void;
-  'round:ended': (summary: { round: number; scores: Record<string, number> }) => void;
+  'round:ended': (summary: {
+    round: number;
+    scores: Record<string, number>;
+  }) => void;
   'game:ended': (winnerId: string) => void;
   'player:disconnected': (playerId: string) => void;
   'player:reconnected': (playerId: string) => void;

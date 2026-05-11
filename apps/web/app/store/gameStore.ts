@@ -18,7 +18,10 @@ function loadIdentity(): { playerId: string | null; roomCode: string | null } {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return { playerId: null, roomCode: null };
-    return JSON.parse(raw) as { playerId: string | null; roomCode: string | null };
+    return JSON.parse(raw) as {
+      playerId: string | null;
+      roomCode: string | null;
+    };
   } catch {
     return { playerId: null, roomCode: null };
   }

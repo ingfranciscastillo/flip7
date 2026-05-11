@@ -1,7 +1,8 @@
 import type { Card } from '@flip7/shared';
 
 let counter = 0;
-const id = (prefix: string) => `${prefix}_${(++counter).toString(36)}_${Date.now().toString(36)}`;
+const id = (prefix: string) =>
+  `${prefix}_${(++counter).toString(36)}_${Date.now().toString(36)}`;
 
 export function buildDeck(): Card[] {
   const deck: Card[] = [];
@@ -18,7 +19,8 @@ export function buildDeck(): Card[] {
   });
   // Actions: 3 of each
   (['freeze', 'flip3', 'second_chance'] as const).forEach((a) => {
-    for (let i = 0; i < 3; i++) deck.push({ kind: 'action', action: a, id: id(`a${a}`) });
+    for (let i = 0; i < 3; i++)
+      deck.push({ kind: 'action', action: a, id: id(`a${a}`) });
   });
   return deck;
 }

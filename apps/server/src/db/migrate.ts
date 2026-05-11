@@ -1,6 +1,6 @@
-import "dotenv/config";
-import { sql } from "drizzle-orm";
-import { db } from "./client";
+import 'dotenv/config';
+import { sql } from 'drizzle-orm';
+import { db } from './client';
 
 async function main() {
   console.log(process.env.DATABASE_URL);
@@ -17,7 +17,7 @@ async function main() {
     );
   `);
 
-  console.log("migration complete");
+  console.log('migration complete');
 }
 
 main().catch(console.error);

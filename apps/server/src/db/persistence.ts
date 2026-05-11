@@ -9,7 +9,9 @@ export async function saveMatchIfPossible(state: RoomState) {
 
   if (!winner) return;
 
-  const finalScores = Object.fromEntries(state.players.map((p) => [p.id, p.totalScore]));
+  const finalScores = Object.fromEntries(
+    state.players.map((p) => [p.id, p.totalScore]),
+  );
 
   try {
     await db.insert(schema.matches).values({

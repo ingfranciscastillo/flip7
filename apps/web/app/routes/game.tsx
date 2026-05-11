@@ -16,13 +16,18 @@ export default function Game() {
   const myTurn = room.currentTurnPlayerId === myId && room.phase === 'playing';
   const pending = room.pendingTarget;
   const iAmSource = pending?.sourcePlayerId === myId;
-  const turnPlayer = room.players.find((p) => p.id === room.currentTurnPlayerId);
+  const turnPlayer = room.players.find(
+    (p) => p.id === room.currentTurnPlayerId,
+  );
 
   const hit = () => getSocket().emit('turn:hit');
   const stay = () => getSocket().emit('turn:stay');
   const target = (targetId: string) => {
     if (!pending) return;
-    getSocket().emit('card:target', { cardId: pending.cardId, targetPlayerId: targetId });
+    getSocket().emit('card:target', {
+      cardId: pending.cardId,
+      targetPlayerId: targetId,
+    });
   };
   const nextRound = () => getSocket().emit('game:start'); // host re-uses; engine ignores if not lobby
   // For round_end we want a "next round" — we'll add a server hook? simpler: host clicks reset/next via dedicated event
@@ -51,14 +56,18 @@ export default function Game() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
         <AnimatePresence>
           {room.players.map((p) => {
-            const selectable = !!pending && iAmSource && p.status === 'active' && p.id !== myId;
+            const selectable =
+              !!pending && iAmSource && p.status === 'active' && p.id !== myId;
             return (
               <PlayerSeat
                 key={p.id}
                 player={p}
                 isCurrentTurn={p.id === room.currentTurnPlayerId}
                 isMe={p.id === myId}
-                selectable={selectable || (!!pending && iAmSource && p.id === myId && false)}
+                selectable={
+                  selectable ||
+                  (!!pending && iAmSource && p.id === myId && false)
+                }
                 onClick={selectable ? () => target(p.id) : undefined}
               />
             );
@@ -73,7 +82,8 @@ export default function Game() {
           className="fixed bottom-24 left-0 right-0 text-center pointer-events-none"
         >
           <span className="pill bg-primary/30 text-primary">
-            Elige un jugador para {pending.action === 'freeze' ? 'congelar ❄️' : 'forzar Flip 3 🔁'}
+            Elige un jugador para{' '}
+            {pending.action === 'freeze' ? 'congelar ❄️' : 'forzar Flip 3 🔁'}
           </span>
         </motion.div>
       )}

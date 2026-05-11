@@ -13,7 +13,8 @@ const ROOM_TTL_MS = 1000 * 60 * 60 * 4; // 4h
 function genCode(): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let s = '';
-  for (let i = 0; i < 6; i++) s += chars[Math.floor(Math.random() * chars.length)];
+  for (let i = 0; i < 6; i++)
+    s += chars[Math.floor(Math.random() * chars.length)];
   return s;
 }
 
@@ -45,7 +46,8 @@ export class RoomManager {
   sweep() {
     const cutoff = Date.now() - ROOM_TTL_MS;
     for (const [code, r] of this.rooms) {
-      if (r.createdAt < cutoff && r.socketByPlayer.size === 0) this.rooms.delete(code);
+      if (r.createdAt < cutoff && r.socketByPlayer.size === 0)
+        this.rooms.delete(code);
     }
   }
 }

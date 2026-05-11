@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
   --color-bg: #0b0d12;
@@ -19,7 +19,7 @@
   --shadow-glow: 0 10px 40px -10px rgba(255, 91, 138, 0.5);
   --shadow-card: 0 4px 18px rgba(0, 0, 0, 0.4);
 
-  --font-sans: "Inter", system-ui, sans-serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
 }
 
 :root {

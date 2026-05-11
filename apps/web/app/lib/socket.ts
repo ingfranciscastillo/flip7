@@ -5,7 +5,10 @@ const URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:4000';
 
 let _socket: Socket<ServerToClientEvents, ClientToServerEvents> | null = null;
 
-export function getSocket(): Socket<ServerToClientEvents, ClientToServerEvents> {
+export function getSocket(): Socket<
+  ServerToClientEvents,
+  ClientToServerEvents
+> {
   if (!_socket) {
     _socket = io(URL, {
       autoConnect: true,
