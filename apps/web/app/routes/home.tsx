@@ -85,29 +85,28 @@ export default function Home() {
       <nav className="w-full flex items-center justify-end px-6 py-4">
         <Link
           to="/how-to-play"
-          className="text-sm text-white hover:text-primary transition font-body"
+          className="text-sm text-primary hover:text-primary transition font-body"
         >
           ¿Cómo jugar?
         </Link>
       </nav>
 
-      {/* CENTRADO */}
-      <div className="flex-1 flex items-center justify-center p-4">
+      <div className="flex-1 flex flex-col items-center justify-center p-4 gap-8">
+        <div className="text-center">
+          <h2 className="font-display text-6xl font-black text-primary tracking-wide">
+            Flip 7
+          </h2>
+          <p className="text-sm mt-1 font-mono tracking-wider">
+            Multijugador en tiempo real
+          </p>
+        </div>
+
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md card-surface p-6 space-y-5"
+          className="w-full max-w-md card-surface p-8 space-y-10"
         >
-          <div className="text-center">
-            <h2 className="font-display text-4xl font-black bg-linear-to-r from-primary to-accent bg-clip-text text-transparent">
-              Flip 7
-            </h2>
-            <p className="text-sm text-muted mt-1 font-mono">
-              Multijugador en tiempo real
-            </p>
-          </div>
-
-          <div className="space-y-2">
+          <div className="space-y-4">
             <label className="text-sm text-muted">Tu nombre</label>
             <input
               className="input"
@@ -118,7 +117,7 @@ export default function Home() {
             />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-4">
             <label className="text-sm text-muted">Avatar</label>
             <div className="grid grid-cols-6 gap-2">
               {EMOJIS.map((e) => (

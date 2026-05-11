@@ -1,31 +1,32 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-bg: #0b0d12;
-  --color-surface: #151823;
-  --color-surface2: #1d2230;
-  --color-border: #262c3d;
+  --color-bg: #f4f1ea;
+  --color-surface: #ffffff;
+  --color-surface2: #f7f5ef;
+  --color-border: #e6e0d4;
 
-  --color-primary: #ff5b8a;
-  --color-primary-glow: #ff8fb1;
-  --color-accent: #7c5cff;
-  --color-gold: #ffcc4d;
-  --color-success: #4ade80;
-  --color-danger: #f87171;
+  --color-primary: #e11d48;        /* rojo casino moderno */
+  --color-primary-glow: #fb7185;
 
-  --color-ink: #f5f5f7;
-  --color-muted: #8b91a7;
+  --color-accent: #2563eb;         /* azul fichas / UI */
+  --color-gold: #fbbf24;           /* dorado más suave */
+  --color-success: #22c55e;
+  --color-danger: #ef4444;
 
-  --shadow-glow: 0 10px 40px -10px rgba(255, 91, 138, 0.5);
-  --shadow-card: 0 4px 18px rgba(0, 0, 0, 0.4);
+  --color-ink: #1f2937;
+  --color-muted: #6b7280;
+
+  --shadow-glow: 0 10px 30px -10px rgba(225, 29, 72, 0.25);
+  --shadow-card: 0 8px 20px rgba(0, 0, 0, 0.08);
 
   --font-display: 'Bangers', cursive;
-  --font-body: 'Fredoka', sans-serif;
+  --font-body: 'Fredoka', system-ui, sans-serif;
   --font-sans: 'Fredoka', system-ui, sans-serif;
 }
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html,
@@ -34,34 +35,38 @@ body,
   height: 100%;
 }
 
+/* 🎲 mesa de casino suave */
 body {
   background:
     radial-gradient(
-      100vw 80vh at 10% -5%,
-      rgba(124, 92, 255, 0.15),
-      transparent 50%
+      120vw 80vh at 10% -10%,
+      rgba(225, 29, 72, 0.08),
+      transparent 60%
     ),
     radial-gradient(
-      80vw 60vh at 100% 0%,
-      rgba(255, 91, 138, 0.15),
-      transparent 50%
+      100vw 70vh at 100% 0%,
+      rgba(37, 99, 235, 0.08),
+      transparent 60%
     ),
-    #0b0d12;
+    #f4f1ea;
 
   background-attachment: fixed;
   background-repeat: no-repeat;
+
   color: var(--color-ink);
   font-family: var(--font-sans);
+
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
 
+/* 🧱 botones más “jugables”, menos neón */
 @utility btn {
   @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 font-semibold transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50;
 }
 
 @utility btn-primary {
-  @apply btn bg-primary text-white shadow-glow hover:brightness-110;
+  @apply btn bg-primary text-white hover:brightness-110;
 }
 
 @utility btn-ghost {
@@ -72,12 +77,12 @@ body {
   @apply btn bg-danger text-white hover:brightness-110;
 }
 
-@utility input {
-  @apply w-full rounded-xl border border-border bg-surface2 px-4 py-3 text-ink placeholder:text-muted focus:ring-2 focus:ring-primary/60 focus:outline-none;
+@utility card-surface {
+  @apply rounded-2xl border border-border bg-surface;
 }
 
-@utility card-surface {
-  @apply rounded-2xl border border-border bg-surface shadow-card;
+@utility input {
+  @apply w-full rounded-xl border border-border bg-surface px-4 py-3 text-ink placeholder:text-muted focus:ring-2 focus:ring-primary/30 focus:outline-none;
 }
 
 @utility pill {
@@ -86,10 +91,28 @@ body {
 
 @utility font-display {
   font-family: var(--font-display);
-  letter-spacing: 0.05em;
+  letter-spacing: -0.02em;
 }
 
 @utility font-body {
   font-family: var(--font-body);
   font-weight: 400;
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--color-primary)); /* tu color principal */
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--accent));
 }
