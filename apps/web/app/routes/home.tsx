@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { motion } from 'motion/react';
 import { getSocket } from '../lib/socket';
 import { useIdentity } from '../store/gameStore';
+import { AvatarSelector } from '../components/AvatarSelector';
 
 type RoomCreateResponse =
   | { ok: true; roomCode: string; playerId: string }
@@ -12,26 +13,11 @@ type RoomJoinResponse =
   | { ok: true; playerId: string }
   | { ok: false; error: string };
 
-const EMOJIS = [
-  '🦊',
-  '🐼',
-  '🐧',
-  '🐸',
-  '🦁',
-  '🐙',
-  '🦄',
-  '🐲',
-  '🐵',
-  '🐯',
-  '🐨',
-  '🦉',
-];
-
 export default function Home() {
   const navigate = useNavigate();
   const profile = useIdentity();
   const [name, setName] = useState(profile.name || '');
-  const [emoji, setEmoji] = useState(profile.emoji || '🦊');
+  const [emoji, setEmoji] = useState('');
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -79,6 +65,12 @@ export default function Home() {
     );
   };
 
+  useEffect(() => {
+    if (profile?.emoji) {
+      setEmoji(profile.emoji);
+    }
+  }, [profile?.emoji]);
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* NAVBAR */}
@@ -119,21 +111,7 @@ export default function Home() {
 
           <div className="space-y-4">
             <label className="text-sm text-muted">Avatar</label>
-            <div className="grid grid-cols-6 gap-2">
-              {EMOJIS.map((e) => (
-                <button
-                  key={e}
-                  onClick={() => setEmoji(e)}
-                  className={`aspect-square rounded-xl text-2xl border transition ${
-                    emoji === e
-                      ? 'border-primary bg-primary/10'
-                      : 'border-border bg-surface2'
-                  }`}
-                >
-                  {e}
-                </button>
-              ))}
-            </div>
+            <AvatarSelector value={emoji} onChange={setEmoji} />
           </div>
 
           <button
