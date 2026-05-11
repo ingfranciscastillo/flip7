@@ -37,17 +37,19 @@ body,
 body {
   background:
     radial-gradient(
-      1200px 600px at 20% -10%,
-      rgba(124, 92, 255, 0.18),
-      transparent 60%
+      100vw 80vh at 10% -5%,
+      rgba(124, 92, 255, 0.15),
+      transparent 50%
     ),
     radial-gradient(
-      900px 500px at 100% 0%,
-      rgba(255, 91, 138, 0.18),
-      transparent 60%
+      80vw 60vh at 100% 0%,
+      rgba(255, 91, 138, 0.15),
+      transparent 50%
     ),
     #0b0d12;
 
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
