@@ -118,7 +118,9 @@ export const ErrorPayloadSchema = z.object({
 export interface ClientToServerEvents {
   'room:create': (
     payload: z.infer<typeof RoomCreateSchema>,
-    ack: (res: { ok: true; roomCode: string; playerId: string } | { ok: false; error: string }) => void,
+    ack: (
+      res: { ok: true; roomCode: string; playerId: string } | { ok: false; error: string },
+    ) => void,
   ) => void;
   'room:join': (
     payload: z.infer<typeof RoomJoinSchema>,
@@ -149,5 +151,10 @@ export interface ServerToClientEvents {
   'game:ended': (winnerId: string) => void;
   'player:disconnected': (playerId: string) => void;
   'player:reconnected': (playerId: string) => void;
-  'error': (payload: z.infer<typeof ErrorPayloadSchema>) => void;
+  error: (payload: z.infer<typeof ErrorPayloadSchema>) => void;
+  'card:target-required': (data: {
+    sourcePlayerId: string;
+    cardId: string;
+    action: 'freeze' | 'flip3';
+  }) => void;
 }

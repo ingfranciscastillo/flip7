@@ -5,6 +5,11 @@ import { motion } from 'motion/react';
 import { getSocket } from '../lib/socket';
 import { useIdentity } from '../store/gameStore';
 
+type RoomCreateResponse =
+  | { ok: true; roomCode: string; playerId: string }
+  | { ok: false; error: string };
+type RoomJoinResponse = { ok: true; playerId: string } | { ok: false; error: string };
+
 const EMOJIS = ['🦊', '🐼', '🐧', '🐸', '🦁', '🐙', '🦄', '🐲', '🐵', '🐯', '🐨', '🦉'];
 
 export default function Home() {
@@ -29,7 +34,7 @@ export default function Home() {
     const n = ensureProfile();
     if (!n) return;
     setLoading(true);
-    getSocket().emit('room:create', { name: n, emoji }, (res) => {
+    getSocket().emit('room:create', { name: n, emoji }, (res: RoomCreateResponse) => {
       setLoading(false);
       if (!res.ok) return toast.error(res.error);
       profile.setIdentity({ playerId: res.playerId, roomCode: res.roomCode });
@@ -43,7 +48,7 @@ export default function Home() {
     const c = code.trim().toUpperCase();
     if (c.length !== 6) return toast.error('Código inválido');
     setLoading(true);
-    getSocket().emit('room:join', { code: c, name: n, emoji }, (res) => {
+    getSocket().emit('room:join', { code: c, name: n, emoji }, (res: RoomJoinResponse) => {
       setLoading(false);
       if (!res.ok) return toast.error(res.error);
       profile.setIdentity({ playerId: res.playerId, roomCode: c });

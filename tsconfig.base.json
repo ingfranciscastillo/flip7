@@ -14,11 +14,12 @@
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "verbatimModuleSyntax": false,
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
-      "@flip7/shared": ["packages/shared/src/index.ts"],
+      "@flip7/shared": ["packages/shared/src"],
       "@flip7/shared/*": ["packages/shared/src/*"],
-      "@flip7/game-engine": ["packages/game-engine/src/index.ts"],
+      "@flip7/game-engine": ["packages/game-engine/src"],
       "@flip7/game-engine/*": ["packages/game-engine/src/*"]
     }
   }

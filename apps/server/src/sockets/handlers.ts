@@ -1,5 +1,6 @@
 import type { Server, Socket } from 'socket.io';
 import { randomUUID } from 'node:crypto';
+import type { RoomPhase, RoomState } from '@flip7/shared';
 import {
   CardTargetSchema,
   RoomCreateSchema,
@@ -45,6 +46,13 @@ function emitEngineEvents(io: IO, code: string, events: EngineEvent[]) {
         break;
       case 'game_ended':
         io.to(code).emit('game:ended', ev.winnerId);
+        break;
+      case 'pending_target':
+        io.to(code).emit('card:target-required', {
+          sourcePlayerId: ev.sourcePlayerId,
+          cardId: ev.cardId,
+          action: ev.action,
+        });
         break;
     }
   }
@@ -210,7 +218,10 @@ export function registerHandlers(io: IO, socket: S) {
   });
 }
 
-function maybePersistEnd(room: { code: string; engine: { phase: string; toRoomState: () => any } }) {
+function maybePersistEnd(room: {
+  code: string;
+  engine: { phase: RoomPhase; toRoomState: () => RoomState };
+}) {
   if (room.engine.phase === 'game_end') {
     void saveMatchIfPossible(room.engine.toRoomState());
   }

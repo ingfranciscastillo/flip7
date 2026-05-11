@@ -41,14 +41,17 @@ export function useSocketLifecycle() {
       toast.success(`🏆 ${p?.name ?? 'Jugador'} ganó la partida!`);
     };
     const onConnect = () => {
-      // Try rejoin if identity exists
       const id = useIdentity.getState();
       if (id.playerId && id.roomCode) {
-        socket.emit('room:rejoin', { code: id.roomCode, playerId: id.playerId }, (res) => {
-          if (!res.ok) {
-            useIdentity.getState().clearIdentity();
-          }
-        });
+        socket.emit(
+          'room:rejoin',
+          { code: id.roomCode, playerId: id.playerId },
+          (res: { ok: true } | { ok: false; error: string }) => {
+            if (!res.ok) {
+              useIdentity.getState().clearIdentity();
+            }
+          },
+        );
       }
     };
 

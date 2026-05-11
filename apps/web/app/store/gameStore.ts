@@ -18,7 +18,7 @@ function loadIdentity(): { playerId: string | null; roomCode: string | null } {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return { playerId: null, roomCode: null };
-    return JSON.parse(raw);
+    return JSON.parse(raw) as { playerId: string | null; roomCode: string | null };
   } catch {
     return { playerId: null, roomCode: null };
   }
@@ -28,7 +28,7 @@ function loadProfile(): { name: string; emoji: string } {
   try {
     const raw = localStorage.getItem(PROFILE_KEY);
     if (!raw) return { name: '', emoji: '🦊' };
-    return JSON.parse(raw);
+    return JSON.parse(raw) as { name: string; emoji: string };
   } catch {
     return { name: '', emoji: '🦊' };
   }

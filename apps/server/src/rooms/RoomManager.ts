@@ -39,7 +39,7 @@ export class RoomManager {
   }
 
   delete(code: string) {
-    this.rooms.delete(code);
+    this.rooms.delete(code.toUpperCase());
   }
 
   sweep() {
