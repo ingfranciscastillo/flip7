@@ -6,7 +6,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { getSocket } from '../lib/socket';
 import { useGame, useIdentity } from '../store/gameStore';
 
-export function Lobby() {
+export default function Lobby() {
   const { code = '' } = useParams();
   const room = useGame((s) => s.room);
   const me = useIdentity();

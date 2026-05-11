@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { getSocket } from '../lib/socket';
 import { useGame, useIdentity } from '../store/gameStore';
 
-export function GameOver() {
+export default function GameOver() {
   const room = useGame((s) => s.room);
   const me = useIdentity();
   if (!room) return null;

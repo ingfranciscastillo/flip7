@@ -1,12 +1,10 @@
-import { sql } from 'drizzle-orm';
-import { getDb } from './client';
+import "dotenv/config";
+import { sql } from "drizzle-orm";
+import { db } from "./client";
 
 async function main() {
-  const db = getDb();
-  if (!db) {
-    console.log('[migrate] no DATABASE_URL, skipping');
-    return;
-  }
+  console.log(process.env.DATABASE_URL);
+
   await db.execute(sql`
     CREATE TABLE IF NOT EXISTS matches (
       id SERIAL PRIMARY KEY,
@@ -18,10 +16,8 @@ async function main() {
       ended_at TIMESTAMP NOT NULL DEFAULT NOW()
     );
   `);
-  console.log('[migrate] ok');
+
+  console.log("migration complete");
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+main().catch(console.error);

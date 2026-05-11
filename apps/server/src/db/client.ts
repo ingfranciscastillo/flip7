@@ -1,18 +1,14 @@
-import postgres from 'postgres';
-import { drizzle } from 'drizzle-orm/postgres-js';
-import { env } from '../env';
-import * as schema from './schema';
+import "dotenv/config";
 
-let _db: ReturnType<typeof drizzle> | null = null;
-let _client: ReturnType<typeof postgres> | null = null;
+import { drizzle } from "drizzle-orm/neon-http";
 
-export function getDb() {
-  if (!env.DATABASE_URL) return null;
-  if (!_db) {
-    _client = postgres(env.DATABASE_URL, { max: 5 });
-    _db = drizzle(_client, { schema });
-  }
-  return _db;
+import * as schema from "./schema";
+import { env } from "../env";
+
+if (!env.DATABASE_URL) {
+  throw new Error("DATABASE_URL is missing");
 }
 
-export { schema };
+export const db = drizzle(env.DATABASE_URL);
+
+export {schema}

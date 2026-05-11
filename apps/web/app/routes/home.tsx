@@ -7,7 +7,7 @@ import { useIdentity } from '../store/gameStore';
 
 const EMOJIS = ['🦊', '🐼', '🐧', '🐸', '🦁', '🐙', '🦄', '🐲', '🐵', '🐯', '🐨', '🦉'];
 
-export function Home() {
+export default function Home() {
   const navigate = useNavigate();
   const profile = useIdentity();
   const [name, setName] = useState(profile.name || '');

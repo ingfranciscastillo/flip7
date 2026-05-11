@@ -6,7 +6,7 @@ import { PlayerSeat } from '../components/PlayerSeat';
 import { Table } from '../components/Table';
 import { TurnIndicator } from '../components/TurnIndicator';
 
-export function Game() {
+export default function Game() {
   const { code = '' } = useParams();
   const room = useGame((s) => s.room);
   const me = useIdentity();
