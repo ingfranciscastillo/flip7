@@ -149,6 +149,7 @@ export interface ClientToServerEvents {
 export interface ServerToClientEvents {
   'room:state': (state: RoomState) => void;
   'game:started': () => void;
+  'game:reset': () => void;
   'turn:changed': (playerId: string) => void;
   'card:dealt': (data: { playerId: string; card: Card }) => void;
   'player:busted': (playerId: string) => void;

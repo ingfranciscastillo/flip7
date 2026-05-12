@@ -48,6 +48,12 @@ export function useSocketLifecycle() {
       const p = useGame.getState().room?.players.find((x) => x.id === id);
       toast.success(`${p?.emoji ?? ''} ${p?.name ?? 'Jugador'} se reconectó`);
     };
+    const onGameStarted = () => {
+      toast.info('¡El host ha iniciado una nueva partida!');
+    };
+    const onGameReset = () => {
+      toast.info('La sala ha sido reiniciada');
+    };
     const onConnect = () => {
       const id = useIdentity.getState();
       if (id.playerId && id.roomCode) {
@@ -70,6 +76,8 @@ export function useSocketLifecycle() {
     socket.on('player:busted', onBusted);
     socket.on('player:flip7', onFlip7);
     socket.on('game:ended', onGameEnd);
+    socket.on('game:started', onGameStarted);
+    socket.on('game:reset', onGameReset);
     socket.on('player:disconnected', onDisconnected);
     socket.on('player:reconnected', onReconnected);
 
@@ -81,6 +89,8 @@ export function useSocketLifecycle() {
       socket.off('player:busted', onBusted);
       socket.off('player:flip7', onFlip7);
       socket.off('game:ended', onGameEnd);
+      socket.off('game:started', onGameStarted);
+      socket.off('game:reset', onGameReset);
       socket.off('player:disconnected', onDisconnected);
       socket.off('player:reconnected', onReconnected);
     };

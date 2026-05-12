@@ -191,6 +191,7 @@ export function registerHandlers(io: IO, socket: S) {
     const room = manager.get(currentRoom);
     if (!room) return;
     room.engine.resetGame(currentPlayer);
+    io.to(currentRoom).emit('game:reset');
     broadcastState(io, currentRoom);
   });
 
@@ -244,7 +245,7 @@ export function registerHandlers(io: IO, socket: S) {
     io.to(currentRoom).emit('player:disconnected', currentPlayer);
     broadcastState(io, currentRoom);
 
-    const anyoneOnline = room.engine.players.some(p => p.connected);
+    const anyoneOnline = room.engine.players.some((p) => p.connected);
 
     if (!anyoneOnline) {
       manager.delete(currentRoom);

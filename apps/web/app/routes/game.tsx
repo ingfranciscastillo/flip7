@@ -13,6 +13,7 @@ export default function Game() {
   if (!room) return <div className="p-6 text-muted">Conectando…</div>;
 
   const myId = me.playerId;
+  const isHost = room.hostId === myId;
   const myTurn = room.currentTurnPlayerId === myId && room.phase === 'playing';
   const pending = room.pendingTarget;
   const iAmSource = pending?.sourcePlayerId === myId;
@@ -34,19 +35,37 @@ export default function Game() {
     me.clearIdentity();
     window.location.href = '/';
   };
-  const nextRound = () => getSocket().emit('game:start'); // host re-uses; engine ignores if not lobby
-  // For round_end we want a "next round" — we'll add a server hook? simpler: host clicks reset/next via dedicated event
-  // We'll show a simple "Continue" that triggers a new round through game:reset+start trick — instead use a dedicated event:
-  // (Engine has nextRound but no socket route — quick add via game:start hack; we'll just emit a fake)
+  const resetGame = () => {
+    if (
+      window.confirm(
+        '¿Seguro que quieres reiniciar la sala? Se perderá todo el progreso.',
+      )
+    ) {
+      getSocket().emit('game:reset');
+    }
+  };
+  const nextRound = () => getSocket().emit('game:start');
 
   return (
     <div className="min-h-screen p-3 max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-3">
         <span className="pill bg-surface2 text-muted">Sala {code}</span>
-        <span className="pill bg-surface2 text-muted">Ronda {room.round}</span>
-        <button className="pill bg-surface2 text-muted" onClick={leaveGame}>
-          Salir del juego
-        </button>
+        <div className="flex items-center gap-2">
+          <span className="pill bg-surface2 text-muted">
+            Ronda {room.round}
+          </span>
+          {isHost && (
+            <button
+              className="pill bg-danger/20 text-danger hover:bg-danger/30"
+              onClick={resetGame}
+            >
+              Reiniciar sala
+            </button>
+          )}
+          <button className="pill bg-surface2 text-muted" onClick={leaveGame}>
+            Salir
+          </button>
+        </div>
       </div>
 
       <div className="flex justify-center mb-3">
