@@ -64,18 +64,14 @@ export default function Game() {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
         <AnimatePresence>
           {room.players.map((p) => {
-            const selectable =
-              !!pending && iAmSource && p.status === 'active' && p.id !== myId;
+            const selectable = !!pending && iAmSource && p.status === 'active';
             return (
               <PlayerSeat
                 key={p.id}
                 player={p}
                 isCurrentTurn={p.id === room.currentTurnPlayerId}
                 isMe={p.id === myId}
-                selectable={
-                  selectable ||
-                  (!!pending && iAmSource && p.id === myId && false)
-                }
+                selectable={selectable}
                 onClick={selectable ? () => target(p.id) : undefined}
               />
             );
@@ -90,7 +86,7 @@ export default function Game() {
           className="fixed bottom-24 left-0 right-0 text-center pointer-events-none"
         >
           <span className="pill bg-primary/30 text-primary">
-            Elige un jugador para{' '}
+            Selecciona un objetivo para{' '}
             {pending.action === 'freeze' ? 'congelar ❄️' : 'forzar Flip 3 🔁'}
           </span>
         </motion.div>
