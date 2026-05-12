@@ -3,16 +3,16 @@ import { memo } from 'react';
 const EMOJIS = [
   '🦊',
   '🐼',
-  '🐧',
+  '🐻‍❄️',
   '🐸',
   '🦁',
   '🐙',
-  '🦄',
-  '🐲',
+  '🤖',
+  '🐥',
   '🐵',
   '🐯',
   '🐨',
-  '🦉',
+  '🐶',
 ] as const;
 
 interface AvatarButtonProps {
