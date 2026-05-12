@@ -3,8 +3,8 @@
 [![portfolio](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://franciscode.dev/)
 [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ingfranciscastillo/)
 [![behance](https://img.shields.io/badge/behance-1769FF?style=for-the-badge&logo=behance&logoColor=white)](https://www.behance.net/ingfranciscastillo)
-[![github_stars](https://img.shields.io/badge/github_stars-FFC000?style=for-the-badge&logo=github&logoColor=black)](https://github.com/ingfranciscastillo/flip7)
-[![last_commit](https://img.shields.io/badge/last_commit-2026-blue?style=for-the-badge)](https://github.com/ingfranciscastillo/flip7/commits)
+[![github_stars](https://img.shields.io/github/stars/ingfranciscastillo/flip7?style=for-the-badge)](https://github.com/ingfranciscastillo/flip7)
+[![last_commit](https://img.shields.io/github/last-commit/ingfranciscastillo/flip7?style=for-the-badge)](https://github.com/ingfranciscastillo/flip7/commits)
 
 **Flip 7** es una adaptación digital del juego de cartas de mesa _Flip 7_ creado por Eric Olsen y publicado por The Op Games. Es un juego party de tipo "press-your-luck" donde los jugadores toman turnos robando cartas, intentando construir la línea más alta de puntos sin repetirlas. Con reglas simples pero estrategia profunda, cada ronda es una tensión entre arriesgar para más puntos o asegurar lo que tienes.
 
