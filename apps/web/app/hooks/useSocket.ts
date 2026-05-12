@@ -40,6 +40,14 @@ export function useSocketLifecycle() {
       const p = useGame.getState().room?.players.find((x) => x.id === winnerId);
       toast.success(`🏆 ${p?.name ?? 'Jugador'} ganó la partida!`);
     };
+    const onDisconnected = (id: string) => {
+      const p = useGame.getState().room?.players.find((x) => x.id === id);
+      toast.warning(`${p?.emoji ?? ''} ${p?.name ?? 'Jugador'} se desconectó`);
+    };
+    const onReconnected = (id: string) => {
+      const p = useGame.getState().room?.players.find((x) => x.id === id);
+      toast.success(`${p?.emoji ?? ''} ${p?.name ?? 'Jugador'} se reconectó`);
+    };
     const onConnect = () => {
       const id = useIdentity.getState();
       if (id.playerId && id.roomCode) {
@@ -62,6 +70,8 @@ export function useSocketLifecycle() {
     socket.on('player:busted', onBusted);
     socket.on('player:flip7', onFlip7);
     socket.on('game:ended', onGameEnd);
+    socket.on('player:disconnected', onDisconnected);
+    socket.on('player:reconnected', onReconnected);
 
     return () => {
       socket.off('connect', onConnect);
@@ -71,6 +81,8 @@ export function useSocketLifecycle() {
       socket.off('player:busted', onBusted);
       socket.off('player:flip7', onFlip7);
       socket.off('game:ended', onGameEnd);
+      socket.off('player:disconnected', onDisconnected);
+      socket.off('player:reconnected', onReconnected);
     };
   }, [setRoom, setLastDealt, navigate]);
 }

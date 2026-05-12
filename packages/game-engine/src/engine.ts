@@ -32,6 +32,7 @@ export interface PlayerInternal {
   emoji: string;
   isHost: boolean;
   connected: boolean;
+  previousStatus: PlayerPublic['status'] | null;
   totalScore: number;
   hand: Card[];
   status: PlayerPublic['status'];
@@ -80,6 +81,7 @@ export class GameEngine {
       emoji: p.emoji,
       isHost,
       connected: true,
+      previousStatus: null,
       totalScore: 0,
       hand: [],
       status: 'active',
@@ -100,7 +102,26 @@ export class GameEngine {
 
   setConnected(playerId: string, connected: boolean) {
     const p = this.players.find((x) => x.id === playerId);
-    if (p) p.connected = connected;
+    if (!p) return;
+
+    if (!connected && this.phase === 'playing') {
+      // Guardar estado previo si estaba activo
+      if (p.status === 'active') {
+        p.previousStatus = 'active';
+      }
+      p.connected = false;
+      // Solo marcar como desconectado si no estaba en estado terminal
+      if (p.status === 'active') {
+        p.status = 'disconnected';
+      }
+    } else if (connected && p.status === 'disconnected') {
+      // Restaurar al estado previo
+      p.status = p.previousStatus ?? 'active';
+      p.previousStatus = null;
+      p.connected = true;
+    } else {
+      p.connected = connected;
+    }
   }
 
   // -------- Round / Game --------
