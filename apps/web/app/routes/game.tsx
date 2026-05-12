@@ -8,6 +8,21 @@ import { TurnIndicator } from '../components/TurnIndicator';
 import { AnnouncementOverlay } from '../components/AnnouncementOverlay';
 import { ConfettiCelebration } from '../components/ConfettiCelebration';
 
+export function meta({ params }: { params: { code?: string } }) {
+  return [
+    { title: `Partida ${params.code || ''} - Flip 7 Online` },
+    {
+      name: 'description',
+      content:
+        'Partida de Flip 7 Online en curso. ¡Demuestra tu suerte y estrategia!',
+    },
+    {
+      property: 'og:url',
+      content: `https://flip7-web.vercel.app/game/${params.code || ''}`,
+    },
+  ];
+}
+
 export default function Game() {
   const { code = '' } = useParams();
   const room = useGame((s) => s.room);

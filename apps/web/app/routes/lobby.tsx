@@ -1,4 +1,4 @@
-import { useParams, Navigate } from 'react-router';
+import { Link, useParams, Navigate } from 'react-router';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'motion/react';
 import { Copy01FreeIcons, UserMultipleIcon } from '@hugeicons/core-free-icons';
@@ -6,6 +6,21 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { getSocket } from '../lib/socket';
 import { useGame, useIdentity } from '../store/gameStore';
 import { ConfettiCelebration } from '../components/ConfettiCelebration';
+
+export function meta({ params }: { params: { code?: string } }) {
+  return [
+    { title: `Sala ${params.code || ''} - Flip 7 Online` },
+    {
+      name: 'description',
+      content:
+        'Sala de espera de Flip 7 Online. Invita a tus amigos y empieza la partida.',
+    },
+    {
+      property: 'og:url',
+      content: `https://flip7-web.vercel.app/lobby/${params.code || ''}`,
+    },
+  ];
+}
 
 export default function Lobby() {
   const { code = '' } = useParams();

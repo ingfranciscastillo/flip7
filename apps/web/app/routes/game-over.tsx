@@ -3,6 +3,17 @@ import { motion } from 'motion/react';
 import { getSocket } from '../lib/socket';
 import { useGame, useIdentity } from '../store/gameStore';
 
+export function meta() {
+  return [
+    { title: 'Fin de Partida - Flip 7 Online' },
+    {
+      name: 'description',
+      content:
+        'Resultados de la partida de Flip 7 Online. ¡El primer jugador en 200 puntos gana!',
+    },
+  ];
+}
+
 export default function GameOver() {
   const room = useGame((s) => s.room);
   const me = useIdentity();

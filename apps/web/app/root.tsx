@@ -12,7 +12,33 @@ import './app.css';
 import { Toaster } from 'sonner';
 import { useSocketLifecycle } from './hooks/useSocket';
 
+const BASE_URL = 'https://flip7-web.vercel.app';
+
+export const meta: Route.MetaFunction = () => [
+  { title: 'Flip 7 Online' },
+  {
+    name: 'description',
+    content:
+      'Juego de cartas multiplayer en tiempo real. Basado en Flip 7 de The Op Games. ¡Juega online con hasta 8 jugadores!',
+  },
+  { property: 'og:title', content: 'Flip 7 Online' },
+  {
+    property: 'og:description',
+    content:
+      'Juega Flip 7 online con hasta 8 jugadores en tiempo real. Un juego press-your-luck lleno de emoción.',
+  },
+  { property: 'og:type', content: 'website' },
+  { property: 'og:url', content: BASE_URL },
+  { name: 'twitter:card', content: 'summary' },
+  { name: 'twitter:title', content: 'Flip 7 Online' },
+  {
+    name: 'twitter:description',
+    content: 'Juego de cartas multiplayer en tiempo real',
+  },
+];
+
 export const links: Route.LinksFunction = () => [
+  { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
   {
     rel: 'preconnect',

@@ -6,6 +6,18 @@ import {
 } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 
+export function meta() {
+  return [
+    { title: 'Cómo Jugar - Flip 7 Online' },
+    {
+      name: 'description',
+      content:
+        'Aprende a jugar Flip 7. Reglas, cartas especiales, puntuación y estrategias para ganar.',
+    },
+    { property: 'og:url', content: 'https://flip7-web.vercel.app/how-to-play' },
+  ];
+}
+
 function StatBadge({ value, label }: { value: string; label: string }) {
   return (
     <div className="bg-surface2 border border-border rounded-xl px-4 py-2 text-center">

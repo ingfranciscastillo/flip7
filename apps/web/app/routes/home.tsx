@@ -6,6 +6,17 @@ import { getSocket } from '../lib/socket';
 import { useIdentity } from '../store/gameStore';
 import { AvatarSelector } from '../components/AvatarSelector';
 
+export function meta() {
+  return [
+    { title: 'Flip 7 Online - Juega Ahora' },
+    {
+      name: 'description',
+      content:
+        'Crea una sala o únete a una partida de Flip 7. Multijugador en tiempo real con hasta 8 jugadores.',
+    },
+  ];
+}
+
 type RoomCreateResponse =
   | { ok: true; roomCode: string; playerId: string }
   | { ok: false; error: string };
