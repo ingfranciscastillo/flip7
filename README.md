@@ -4,15 +4,11 @@
 [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ingfranciscastillo/)
 [![behance](https://img.shields.io/badge/behance-1769FF?style=for-the-badge&logo=behance&logoColor=white)](https://www.behance.net/ingfranciscastillo)
 [![github_stars](https://img.shields.io/badge/github_stars-FFC000?style=for-the-badge&logo=github&logoColor=black)](https://github.com/ingfranciscastillo/flip7)
-[![license](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)](LICENSE)
 [![last_commit](https://img.shields.io/badge/last_commit-2026-blue?style=for-the-badge)](https://github.com/ingfranciscastillo/flip7/commits)
 
 **Flip 7** es una adaptación digital del juego de cartas de mesa _Flip 7_ creado por Eric Olsen y publicado por The Op Games. Es un juego party de tipo "press-your-luck" donde los jugadores toman turnos robando cartas, intentando construir la línea más alta de puntos sin repetirlas. Con reglas simples pero estrategia profunda, cada ronda es una tensión entre arriesgar para más puntos o asegurar lo que tienes.
 
 Este proyecto es un monorepo TypeScript que implementa el juego completo con sockets en tiempo real, motor de juego puro testeado, y una interfaz responsiva con animaciones.
-
-<!-- Add a screenshot of your game here -->
-<!-- ![Flip 7 Gameplay](docs/screenshot.png) -->
 
 ## Features
 
@@ -51,34 +47,19 @@ Este proyecto es un monorepo TypeScript que implementa el juego completo con soc
 ### Requisitos
 
 - [Bun](https://bun.sh) ≥ 1.1
-- Docker + Docker Compose (para Postgres + el stack completo)
-- Node 20+ recomendado para el server fuera de Docker
-
-### Inicio rápido (Docker)
-
-```bash
-cp .env.example .env
-docker compose up --build
-```
-
-Servicios disponibles:
-
-- **Web**: http://localhost:5173
-- **Server**: http://localhost:4000
-- **Postgres**: localhost:5432 (`flip7` / `flip7`)
+- PostgreSQL (puede ser local, Docker, o Neon/Supabase)
 
 ### Desarrollo local
 
 ```bash
 bun install
 
-# Postgres en docker
-docker compose up postgres -d
-
 # En terminales separadas
 bun run dev:server
 bun run dev:web
 ```
+
+Abre http://localhost:5173 en tu navegador.
 
 ## Quick Start
 
@@ -138,7 +119,6 @@ flip7/
 │           ├── cards.ts        # Card logic
 │           └── __tests__/      # Vitest tests
 │
-├── docker-compose.yml
 ├── package.json                # Workspace root
 ├── tsconfig.base.json
 └── README.md
@@ -163,9 +143,9 @@ Ser el primer jugador en alcanzar **200 puntos** a lo largo de múltiples rondas
 
 ### Cómo jugar
 
-1. **En tu turno**: Elige **Hit** (robard otra carta) o **Stay** (asegurar puntos)
+1. **En tu turno**: Elige **Hit** (robar otra carta) o **Stay** (asegurar puntos)
 2. **Bust**: Si robas una carta con el mismo número que ya tienes, pierdes todo para esa ronda
-3. **Flip 7**: Si收集7 cartas numéricas únicas, ganas +15 puntos de bonus y termina la ronda
+3. **Flip 7**: Si obtienes 7 cartas numéricas únicas, ganas +15 puntos de bonus y termina la ronda
 4. **Gana**: El jugador con más puntos al final de la ronda suma su total. El primero en llegar a 200 gana.
 
 ### Condiciones de fin de ronda
@@ -180,7 +160,7 @@ Ser el primer jugador en alcanzar **200 puntos** a lo largo de múltiples rondas
 
 ## Smoke Test
 
-1. `docker compose up`
+1. `bun run dev:server` y `bun run dev:web`
 2. Abre dos pestañas en http://localhost:5173
 3. Crea sala en una, copia el código, únete desde la otra
 4. Inicia partida (mínimo 3 jugadores → puedes abrir más pestañas)
@@ -206,7 +186,7 @@ Configura `VITE_SERVER_URL` en el host del web apuntando al server público.
 
 ## License
 
-MIT License — ver archivo [`LICENSE`](LICENSE) para más detalles.
+MIT License
 
 ## Acknowledgments
 
