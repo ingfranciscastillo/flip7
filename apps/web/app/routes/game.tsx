@@ -62,7 +62,10 @@ export default function Game() {
               Reiniciar sala
             </button>
           )}
-          <button className="pill bg-surface2 text-muted" onClick={leaveGame}>
+          <button
+            className="pill bg-surface2 text-muted hover:bg-accent/30"
+            onClick={leaveGame}
+          >
             Salir
           </button>
         </div>

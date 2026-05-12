@@ -190,10 +190,8 @@ export class GameEngine {
     if (!p || p.id !== playerId) return events;
     if (p.pendingFlips > 0) return events; // auto-flips handled separately
     events.push(...this.dealOneTo(p));
-    if (p.status === 'active') {
-      // turn continues for same player after a hit; player decides hit/stay again
-      // unless an action card requires target — handled in dealOneTo
-    } else {
+    // Always advance turn after a hit (unless there's a pending target to select)
+    if (!this.pendingTarget) {
       events.push(...this.advanceTurn());
     }
     events.push(...this.checkRoundEnd());
