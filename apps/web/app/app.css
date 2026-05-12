@@ -109,10 +109,10 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--color-primary)); /* tu color principal */
+  background: var(--color-primary);
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--accent));
+  background: var(--color-primary-glow);
 }

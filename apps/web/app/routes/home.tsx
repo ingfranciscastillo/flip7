@@ -89,7 +89,7 @@ export default function Home() {
             Flip 7
           </h2>
           <p className="text-sm mt-1 font-mono tracking-wider">
-            Multijugador en tiempo real
+            Card multiplayer Game
           </p>
         </div>
 

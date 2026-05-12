@@ -29,6 +29,11 @@ export default function Game() {
       targetPlayerId: targetId,
     });
   };
+  const leaveGame = () => {
+    getSocket().emit('room:leave');
+    me.clearIdentity();
+    window.location.href = '/';
+  };
   const nextRound = () => getSocket().emit('game:start'); // host re-uses; engine ignores if not lobby
   // For round_end we want a "next round" — we'll add a server hook? simpler: host clicks reset/next via dedicated event
   // We'll show a simple "Continue" that triggers a new round through game:reset+start trick — instead use a dedicated event:
@@ -39,6 +44,9 @@ export default function Game() {
       <div className="flex items-center justify-between mb-3">
         <span className="pill bg-surface2 text-muted">Sala {code}</span>
         <span className="pill bg-surface2 text-muted">Ronda {room.round}</span>
+        <button className="pill bg-surface2 text-muted" onClick={leaveGame}>
+          Salir del juego
+        </button>
       </div>
 
       <div className="flex justify-center mb-3">

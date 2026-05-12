@@ -137,14 +137,29 @@ export function registerHandlers(io: IO, socket: S) {
 
   socket.on('room:leave', () => {
     if (!currentRoom || !currentPlayer) return;
-    const room = manager.get(currentRoom);
+
+    const roomCode = currentRoom;
+
+    const room = manager.get(roomCode);
     if (!room) return;
+
     room.engine.removePlayer(currentPlayer);
     room.socketByPlayer.delete(currentPlayer);
     room.playerBySocket.delete(socket.id);
-    socket.leave(currentRoom);
-    if (room.engine.players.length === 0) manager.delete(currentRoom);
-    else broadcastState(io, currentRoom);
+
+    socket.leave(roomCode);
+
+    if (room.engine.players.length === 0) {
+      setTimeout(() => {
+        const r = manager.get(roomCode);
+        if (r && r.engine.players.length === 0) {
+          manager.delete(roomCode);
+        }
+      }, 60_000);
+    } else {
+      broadcastState(io, roomCode);
+    }
+
     currentRoom = null;
     currentPlayer = null;
   });
@@ -217,13 +232,23 @@ export function registerHandlers(io: IO, socket: S) {
 
   socket.on('disconnect', () => {
     clear(socket.id);
+
     if (!currentRoom || !currentPlayer) return;
+
     const room = manager.get(currentRoom);
     if (!room) return;
+
     room.engine.setConnected(currentPlayer, false);
     room.playerBySocket.delete(socket.id);
+
     io.to(currentRoom).emit('player:disconnected', currentPlayer);
     broadcastState(io, currentRoom);
+
+    const anyoneOnline = room.engine.players.some(p => p.connected);
+
+    if (!anyoneOnline) {
+      manager.delete(currentRoom);
+    }
   });
 }
 

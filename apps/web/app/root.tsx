@@ -38,7 +38,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {children}
         <ScrollRestoration />
         <Scripts />
-        <Toaster theme="dark" position="top-center" richColors />
+        <Toaster position="top-center" richColors />
       </body>
     </html>
   );
