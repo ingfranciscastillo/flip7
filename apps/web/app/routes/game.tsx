@@ -1,16 +1,32 @@
-import { useParams } from 'react-router';
+import { useParams, Navigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { getSocket } from '../lib/socket';
 import { useGame, useIdentity } from '../store/gameStore';
 import { PlayerSeat } from '../components/PlayerSeat';
 import { Table } from '../components/Table';
 import { TurnIndicator } from '../components/TurnIndicator';
+import { AnnouncementOverlay } from '../components/AnnouncementOverlay';
+import { ConfettiCelebration } from '../components/ConfettiCelebration';
 
 export default function Game() {
   const { code = '' } = useParams();
   const room = useGame((s) => s.room);
   const me = useIdentity();
-  if (!room) return <div className="p-6 text-muted">Conectando…</div>;
+
+  if (!me.playerId || !me.roomCode) {
+    return <Navigate to="/" replace />;
+  }
+
+  if (!room) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-muted">Conectando a la partida...</p>
+        </div>
+      </div>
+    );
+  }
 
   const myId = me.playerId;
   const isHost = room.hostId === myId;
@@ -151,6 +167,9 @@ export default function Game() {
           </div>
         </div>
       )}
+
+      <AnnouncementOverlay />
+      <ConfettiCelebration />
     </div>
   );
 }

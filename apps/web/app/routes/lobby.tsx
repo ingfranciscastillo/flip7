@@ -1,15 +1,21 @@
-import { useParams } from 'react-router';
+import { useParams, Navigate } from 'react-router';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'motion/react';
 import { Copy01FreeIcons, UserMultipleIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { getSocket } from '../lib/socket';
 import { useGame, useIdentity } from '../store/gameStore';
+import { ConfettiCelebration } from '../components/ConfettiCelebration';
 
 export default function Lobby() {
   const { code = '' } = useParams();
   const room = useGame((s) => s.room);
   const me = useIdentity();
+
+  if (!me.playerId || !me.roomCode) {
+    return <Navigate to="/" replace />;
+  }
+
   const isHost = room?.hostId === me.playerId;
   const enoughPlayers = (room?.players.length ?? 0) >= 3;
 
@@ -95,6 +101,7 @@ export default function Lobby() {
           Salir
         </button>
       </div>
+      <ConfettiCelebration />
     </div>
   );
 }
