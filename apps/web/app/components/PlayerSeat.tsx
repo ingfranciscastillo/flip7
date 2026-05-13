@@ -72,6 +72,25 @@ export function PlayerSeat({
               <span className="pill bg-gold/30 text-gold">HOST</span>
             )}
             {isMe && <span className="pill bg-accent/30 text-accent">TÚ</span>}
+            {isCurrentTurn && (
+              <span
+                className="flex gap-0.5 items-center"
+                aria-label="Turno actual"
+              >
+                <span
+                  className="w-1 h-1 bg-primary rounded-full animate-bounce"
+                  style={{ animationDelay: '0ms' }}
+                />
+                <span
+                  className="w-1 h-1 bg-primary rounded-full animate-bounce"
+                  style={{ animationDelay: '150ms' }}
+                />
+                <span
+                  className="w-1 h-1 bg-primary rounded-full animate-bounce"
+                  style={{ animationDelay: '300ms' }}
+                />
+              </span>
+            )}
           </div>
           <div className="text-xs text-muted">{player.totalScore} pts</div>
         </div>
