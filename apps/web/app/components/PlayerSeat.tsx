@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import { motion, AnimatePresence } from 'motion/react';
 import type { PlayerPublic } from '@flip7/shared';
 import { Card } from './Card';
+import { useGame } from '../store/gameStore';
 
 interface Props {
   player: PlayerPublic;
@@ -36,6 +37,8 @@ export function PlayerSeat({
   selectable,
   onClick,
 }: Props) {
+  const lastDealtCardId = useGame((s) => s.lastDealtCardId);
+
   const isDisconnected = !player.connected;
 
   return (
@@ -49,6 +52,8 @@ export function PlayerSeat({
         isMe && 'border-accent',
         selectable && 'hover:scale-[1.02] cursor-pointer',
         isDisconnected && 'opacity-60',
+        player.status === 'busted' && 'feedback-shake',
+        player.status === 'frozen' && 'feedback-freeze',
       )}
     >
       {isDisconnected && (
@@ -78,12 +83,57 @@ export function PlayerSeat({
       </div>
       <div className="flex flex-wrap gap-1 min-h-16">
         <AnimatePresence>
-          {player.hand.map((c) => (
-            <Card key={c.id} card={c} small />
-          ))}
+          {player.hand.map((c, index) => {
+            const isNewCard = c.id === lastDealtCardId;
+            const isFirstCard = index === 0 && player.hand.length === 1;
+            const isLastCard = index === player.hand.length - 1;
+
+            let animate:
+              | 'enter'
+              | 'flip'
+              | 'bounce'
+              | 'shake'
+              | 'glow'
+              | 'frozen'
+              | 'none' = 'none';
+
+            if (isNewCard) {
+              if (player.status === 'busted') {
+                animate = 'shake';
+              } else if (player.status === 'flip7') {
+                animate = 'glow';
+              } else if (player.status === 'frozen') {
+                animate = 'frozen';
+              } else if (player.status === 'stayed') {
+                animate = 'bounce';
+              } else if (c.kind === 'modifier') {
+                animate = 'bounce';
+              } else {
+                animate = 'enter';
+              }
+            }
+
+            return (
+              <Card
+                key={c.id}
+                card={c}
+                small
+                animate={animate}
+                delay={isLastCard ? 0 : index * 0.05}
+                highlight={isNewCard && player.status === 'active'}
+              />
+            );
+          })}
         </AnimatePresence>
         {player.hasSecondChance && (
-          <span className="pill bg-accent/20 text-accent self-start">🛟</span>
+          <motion.span
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: 'spring' as const, damping: 8 }}
+            className="pill bg-accent/20 text-accent self-start"
+          >
+            🛟
+          </motion.span>
         )}
       </div>
     </motion.button>
