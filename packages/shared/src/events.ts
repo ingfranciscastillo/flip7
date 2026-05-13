@@ -112,6 +112,19 @@ export const CardTargetSchema = z.object({
   targetPlayerId: z.string(),
 });
 
+export const ChatMessageSchema = z.object({
+  roomCode: z.string().length(6),
+  message: z.string().min(1).max(200),
+});
+
+export interface ChatMessagePayload {
+  playerId: string;
+  playerName: string;
+  emoji: string;
+  message: string;
+  timestamp: number;
+}
+
 // ----- Server -> Client -----
 export const ErrorPayloadSchema = z.object({
   code: z.string(),
@@ -144,6 +157,10 @@ export interface ClientToServerEvents {
   'turn:hit': () => void;
   'turn:stay': () => void;
   'card:target': (payload: z.infer<typeof CardTargetSchema>) => void;
+  'chat:message': (
+    payload: z.infer<typeof ChatMessageSchema>,
+    ack: (res: { ok: true } | { ok: false; error: string }) => void,
+  ) => void;
 }
 
 export interface ServerToClientEvents {
@@ -169,4 +186,5 @@ export interface ServerToClientEvents {
     cardId: string;
     action: 'freeze' | 'flip3';
   }) => void;
+  'chat:message': (payload: ChatMessagePayload) => void;
 }

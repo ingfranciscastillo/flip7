@@ -7,6 +7,7 @@ import { Table } from '../components/Table';
 import { TurnIndicator } from '../components/TurnIndicator';
 import { AnnouncementOverlay } from '../components/AnnouncementOverlay';
 import { ConfettiCelebration } from '../components/ConfettiCelebration';
+import { ChatBox } from '../components/ChatBox';
 
 export function meta({ params }: { params: { code?: string } }) {
   return [
@@ -185,6 +186,7 @@ export default function Game() {
 
       <AnnouncementOverlay />
       <ConfettiCelebration />
+      <ChatBox roomCode={code} />
     </div>
   );
 }

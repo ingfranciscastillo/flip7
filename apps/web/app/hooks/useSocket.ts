@@ -4,11 +4,14 @@ import { toast } from 'sonner';
 import { getSocket } from '../lib/socket';
 import { useGame, useIdentity } from '../store/gameStore';
 import { useFeedbackStore } from '../store/feedbackStore';
+import { useChatStore } from '../store/chatStore';
+import type { ChatMessagePayload } from '@flip7/shared';
 
 export function useSocketLifecycle() {
   const setRoom = useGame((s) => s.setRoom);
   const setLastDealt = useGame((s) => s.setLastDealt);
   const addFeedback = useFeedbackStore((s) => s.addEvent);
+  const addChatMessage = useChatStore((s) => s.addMessage);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -127,6 +130,15 @@ export function useSocketLifecycle() {
       toast.success(`${p?.emoji ?? ''} ${p?.name ?? 'Jugador'} se reconectó`);
     };
 
+    const onChatMessage = (payload: ChatMessagePayload) => {
+      addChatMessage({
+        playerId: payload.playerId,
+        playerName: payload.playerName,
+        emoji: payload.emoji,
+        message: payload.message,
+      });
+    };
+
     const onConnect = () => {
       const id = useIdentity.getState();
       if (id.playerId && id.roomCode) {
@@ -157,6 +169,7 @@ export function useSocketLifecycle() {
     socket.on('game:reset', onGameReset);
     socket.on('player:disconnected', onDisconnected);
     socket.on('player:reconnected', onReconnected);
+    socket.on('chat:message', onChatMessage);
 
     return () => {
       socket.off('connect', onConnect);
@@ -174,6 +187,7 @@ export function useSocketLifecycle() {
       socket.off('game:reset', onGameReset);
       socket.off('player:disconnected', onDisconnected);
       socket.off('player:reconnected', onReconnected);
+      socket.off('chat:message', onChatMessage);
     };
-  }, [setRoom, setLastDealt, addFeedback, navigate]);
+  }, [setRoom, setLastDealt, addFeedback, addChatMessage, navigate]);
 }

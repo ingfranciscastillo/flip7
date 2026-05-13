@@ -6,6 +6,7 @@ import { HugeiconsIcon } from '@hugeicons/react';
 import { getSocket } from '../lib/socket';
 import { useGame, useIdentity } from '../store/gameStore';
 import { ConfettiCelebration } from '../components/ConfettiCelebration';
+import { ChatBox } from '../components/ChatBox';
 
 export function meta({ params }: { params: { code?: string } }) {
   return [
@@ -117,6 +118,7 @@ export default function Lobby() {
         </button>
       </div>
       <ConfettiCelebration />
+      <ChatBox roomCode={code} />
     </div>
   );
 }

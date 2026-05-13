@@ -231,6 +231,35 @@ export function registerHandlers(io: IO, socket: S) {
     maybePersistEnd(room);
   });
 
+  socket.on('chat:message', (raw, ack) => {
+    if (!guard() || !currentRoom || !currentPlayer) {
+      ack?.({ ok: false, error: 'Not in a room' });
+      return;
+    }
+    if (!raw.message || raw.message.length > 200) {
+      ack?.({ ok: false, error: 'Invalid message' });
+      return;
+    }
+    const room = manager.get(currentRoom);
+    if (!room) {
+      ack?.({ ok: false, error: 'Room not found' });
+      return;
+    }
+    const player = room.engine.players.find((p) => p.id === currentPlayer);
+    if (!player) {
+      ack?.({ ok: false, error: 'Player not found' });
+      return;
+    }
+    io.to(currentRoom).emit('chat:message', {
+      playerId: currentPlayer,
+      playerName: player.name,
+      emoji: player.emoji,
+      message: raw.message.trim(),
+      timestamp: Date.now(),
+    });
+    ack?.({ ok: true });
+  });
+
   socket.on('disconnect', () => {
     clear(socket.id);
 
