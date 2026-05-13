@@ -20,7 +20,9 @@ export function ChatBox({ roomCode }: Props) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const hasNewMessages = messages.some((m) => m.timestamp > lastSeenTimestamp);
+  const hasNewMessages = messages.some(
+    (m) => m.playerId !== me.playerId && m.timestamp > lastSeenTimestamp,
+  );
 
   useEffect(() => {
     if (isOpen && messagesEndRef.current) {
