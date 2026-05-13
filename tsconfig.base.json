@@ -14,12 +14,5 @@
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "verbatimModuleSyntax": false,
-    "baseUrl": ".",
-    "paths": {
-      "@flip7/shared": ["packages/shared/src"],
-      "@flip7/shared/*": ["packages/shared/src/*"],
-      "@flip7/game-engine": ["packages/game-engine/src"],
-      "@flip7/game-engine/*": ["packages/game-engine/src/*"]
-    }
   }
 }
