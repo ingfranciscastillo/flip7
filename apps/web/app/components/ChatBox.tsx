@@ -12,13 +12,15 @@ interface Props {
 export function ChatBox({ roomCode }: Props) {
   const messages = useChatStore((s) => s.messages);
   const isOpen = useChatStore((s) => s.isOpen);
+  const lastSeenTimestamp = useChatStore((s) => s.lastSeenTimestamp);
   const toggleOpen = useChatStore((s) => s.toggleOpen);
-  const addMessage = useChatStore((s) => s.addMessage);
   const me = useIdentity();
   const [input, setInput] = useState('');
   const [isSending, setIsSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const hasNewMessages = messages.some((m) => m.timestamp > lastSeenTimestamp);
 
   useEffect(() => {
     if (isOpen && messagesEndRef.current) {
@@ -59,36 +61,45 @@ export function ChatBox({ roomCode }: Props) {
 
   return (
     <>
-      <motion.button
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={toggleOpen}
-        className={clsx(
-          'fixed bottom-20 right-4 z-40 w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-colors',
-          isOpen
-            ? 'bg-primary text-white'
-            : 'bg-surface2 text-muted hover:bg-primary hover:text-white',
-        )}
-        aria-label={isOpen ? 'Cerrar chat' : 'Abrir chat'}
-      >
-        {isOpen ? (
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+      <div className="fixed bottom-20 right-4 z-40 flex items-center gap-2">
+        {hasNewMessages && !isOpen && (
+          <motion.span
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            className="text-xs bg-accent text-white px-2 py-1 rounded-full font-medium"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        ) : (
-          <div className="relative">
+            Nuevo
+          </motion.span>
+        )}
+        <motion.button
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={toggleOpen}
+          className={clsx(
+            'w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-colors',
+            isOpen
+              ? 'bg-primary text-white'
+              : 'bg-surface2 text-muted hover:bg-primary hover:text-white',
+          )}
+          aria-label={isOpen ? 'Cerrar chat' : 'Abrir chat'}
+        >
+          {isOpen ? (
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          ) : (
             <svg
               className="w-5 h-5"
               fill="none"
@@ -102,12 +113,9 @@ export function ChatBox({ roomCode }: Props) {
                 d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
               />
             </svg>
-            {messages.length > 0 && !isOpen && (
-              <span className="absolute -top-1 -right-1 w-3 h-3 bg-accent rounded-full" />
-            )}
-          </div>
-        )}
-      </motion.button>
+          )}
+        </motion.button>
+      </div>
 
       <AnimatePresence>
         {isOpen && (

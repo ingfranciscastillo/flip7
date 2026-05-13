@@ -12,10 +12,12 @@ export interface ChatMessage {
 interface ChatState {
   messages: ChatMessage[];
   isOpen: boolean;
+  lastSeenTimestamp: number;
   addMessage: (msg: Omit<ChatMessage, 'id' | 'timestamp'>) => void;
   clearMessages: () => void;
   toggleOpen: () => void;
   setOpen: (open: boolean) => void;
+  markAsSeen: () => void;
 }
 
 const MAX_MESSAGES = 50;
@@ -23,6 +25,7 @@ const MAX_MESSAGES = 50;
 export const useChatStore = create<ChatState>((set) => ({
   messages: [],
   isOpen: false,
+  lastSeenTimestamp: 0,
 
   addMessage: (msg) => {
     const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -38,14 +41,26 @@ export const useChatStore = create<ChatState>((set) => ({
   },
 
   clearMessages: () => {
-    set({ messages: [] });
+    set({ messages: [], lastSeenTimestamp: Date.now() });
   },
 
   toggleOpen: () => {
-    set((state) => ({ isOpen: !state.isOpen }));
+    set((state) => {
+      if (!state.isOpen) {
+        return { isOpen: true, lastSeenTimestamp: Date.now() };
+      }
+      return { isOpen: false };
+    });
   },
 
   setOpen: (open) => {
-    set({ isOpen: open });
+    set((state) => ({
+      isOpen: open,
+      ...(open ? { lastSeenTimestamp: Date.now() } : {}),
+    }));
+  },
+
+  markAsSeen: () => {
+    set({ lastSeenTimestamp: Date.now() });
   },
 }));
