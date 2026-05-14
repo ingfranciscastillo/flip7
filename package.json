@@ -20,8 +20,5 @@
     "prettier": "^3.8.3",
     "typescript": "^6.0.3",
     "@types/bun": "latest"
-  },
-  "dependencies": {
-    "postgres": "^3.4.9"
   }
 }
