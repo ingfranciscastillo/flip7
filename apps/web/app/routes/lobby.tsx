@@ -7,6 +7,7 @@ import { getSocket } from '../lib/socket';
 import { useGame, useIdentity } from '../store/gameStore';
 import { ConfettiCelebration } from '../components/ConfettiCelebration';
 import { ChatBox } from '../components/ChatBox';
+import { ConnectionStatus } from '../components/ConnectionStatus';
 
 export function meta({ params }: { params: { code?: string } }) {
   return [
@@ -55,16 +56,19 @@ export default function Lobby() {
             <p className="text-xs text-muted uppercase tracking-wider">
               Código de sala
             </p>
-            <button
-              onClick={copy}
-              className="flex items-center gap-2 text-3xl font-black tracking-widest"
-            >
-              {code}
-              <HugeiconsIcon
-                icon={Copy01FreeIcons}
-                className="w-5 h-5 text-muted"
-              />
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={copy}
+                className="flex items-center gap-2 text-3xl font-black tracking-widest"
+              >
+                {code}
+                <HugeiconsIcon
+                  icon={Copy01FreeIcons}
+                  className="w-5 h-5 text-muted"
+                />
+              </button>
+              <ConnectionStatus minimal />
+            </div>
           </div>
           <span className="pill bg-accent/20 text-accent">
             <HugeiconsIcon icon={UserMultipleIcon} className="w-3 h-3" />{' '}

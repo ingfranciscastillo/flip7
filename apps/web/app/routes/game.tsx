@@ -8,6 +8,7 @@ import { TurnIndicator } from '../components/TurnIndicator';
 import { AnnouncementOverlay } from '../components/AnnouncementOverlay';
 import { ConfettiCelebration } from '../components/ConfettiCelebration';
 import { ChatBox } from '../components/ChatBox';
+import { ConnectionStatus } from '../components/ConnectionStatus';
 
 export function meta({ params }: { params: { code?: string } }) {
   return [
@@ -81,7 +82,10 @@ export default function Game() {
   return (
     <div className="min-h-screen p-3 max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-3">
-        <span className="pill bg-surface2 text-muted">Sala {code}</span>
+        <div className="flex items-center gap-2">
+          <span className="pill bg-surface2 text-muted">Sala {code}</span>
+          <ConnectionStatus minimal />
+        </div>
         <div className="flex items-center gap-2">
           <span className="pill bg-surface2 text-muted">
             Ronda {room.round}
