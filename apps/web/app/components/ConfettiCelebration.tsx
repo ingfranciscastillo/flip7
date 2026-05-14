@@ -159,9 +159,9 @@ export function ConfettiCelebration() {
       case 'game_start':
         confetti.gameStartCelebrate();
         break;
-      case 'round_end':
-        confetti.roundEndCelebrate();
-        break;
+      // case 'round_end':
+      //   confetti.roundEndCelebrate();
+      //   break;
     }
   }, [events, confetti]);
 

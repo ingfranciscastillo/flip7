@@ -1,4 +1,5 @@
 import { useParams, Navigate } from 'react-router';
+import { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { getSocket } from '../lib/socket';
 import { useGame, useIdentity } from '../store/gameStore';
@@ -9,6 +10,7 @@ import { AnnouncementOverlay } from '../components/AnnouncementOverlay';
 import { ConfettiCelebration } from '../components/ConfettiCelebration';
 import { ChatBox } from '../components/ChatBox';
 import { ConnectionStatus } from '../components/ConnectionStatus';
+import { ScoreRow } from '../components/ScoreRow';
 
 export function meta({ params }: { params: { code?: string } }) {
   return [
@@ -48,6 +50,32 @@ export default function Game() {
   const myId = me.playerId;
   const isHost = room.hostId === myId;
   const myTurn = room.currentTurnPlayerId === myId && room.phase === 'playing';
+
+  const previousScoresRef = useRef<Record<string, number>>({});
+  const [roundScores, setRoundScores] = useState<{
+    previous: Record<string, number>;
+    current: Record<string, number>;
+  } | null>(null);
+
+  useEffect(() => {
+    if (room.phase === 'round_end') {
+      const currentScores: Record<string, number> = {};
+      room.players.forEach((p) => {
+        currentScores[p.id] = p.totalScore;
+      });
+      setRoundScores({
+        previous: previousScoresRef.current,
+        current: currentScores,
+      });
+    } else {
+      const currentScores: Record<string, number> = {};
+      room.players.forEach((p) => {
+        currentScores[p.id] = p.totalScore;
+      });
+      previousScoresRef.current = currentScores;
+      setRoundScores(null);
+    }
+  }, [room.phase, room.players]);
   const pending = room.pendingTarget;
   const iAmSource = pending?.sourcePlayerId === myId;
   const turnPlayer = room.players.find(
@@ -167,16 +195,18 @@ export default function Game() {
         <div className="fixed bottom-0 inset-x-0 p-4 bg-linear-to-t from-bg via-bg/90 to-transparent">
           <div className="max-w-md mx-auto card-surface p-4 text-center space-y-3">
             <h3 className="font-bold text-lg">Ronda {room.round} terminada</h3>
-            <div className="space-y-1 text-sm">
+            <div className="text-sm">
               {[...room.players]
                 .sort((a, b) => b.totalScore - a.totalScore)
-                .map((p) => (
-                  <div key={p.id} className="flex justify-between">
-                    <span>
-                      {p.emoji} {p.name}
-                    </span>
-                    <span className="font-bold">{p.totalScore}</span>
-                  </div>
+                .map((p, index) => (
+                  <ScoreRow
+                    key={p.id}
+                    previousScore={roundScores?.previous[p.id] ?? p.totalScore}
+                    currentScore={p.totalScore}
+                    player={{ name: p.name, emoji: p.emoji }}
+                    delay={index * 0.1}
+                    isCurrent={p.id === myId}
+                  />
                 ))}
             </div>
             {room.hostId === myId && (

@@ -33,14 +33,14 @@ function Announcement({ event, onComplete }: AnnouncementProps) {
       subtitle: `${event.playerEmoji ?? ''} ${event.playerName ?? 'Jugador'}`,
       subtitleClass: 'text-gold/80',
     },
-    round_end: {
-      container: 'bg-accent/15 backdrop-blur-sm',
-      icon: '🏆',
-      title: '¡RONDA COMPLETA!',
-      titleClass: 'text-accent feedback-bounce-in',
-      subtitle: 'Preparándose para la siguiente...',
-      subtitleClass: 'text-accent/80',
-    },
+    // round_end: {
+    //   container: 'bg-accent/15 backdrop-blur-sm',
+    //   icon: '🏆',
+    //   title: '¡RONDA COMPLETA!',
+    //   titleClass: 'text-accent feedback-bounce-in',
+    //   subtitle: 'Preparándose para la siguiente...',
+    //   subtitleClass: 'text-accent/80',
+    // },
     game_end: {
       container: 'bg-success/15 backdrop-blur-sm',
       icon: '🎉',
