@@ -18,6 +18,7 @@ interface Props {
   highlight?: boolean;
   animate?: CardAnimation;
   delay?: number;
+  layoutId?: string;
 }
 
 const numberColor = (v: number) => {
@@ -54,6 +55,7 @@ export function Card({
   highlight,
   animate = 'none',
   delay = 0,
+  layoutId,
 }: Props) {
   const w = small ? 'w-12 h-16 text-base' : 'w-20 h-28 text-3xl';
 
@@ -70,12 +72,14 @@ export function Card({
       return (
         <motion.div
           layout
-          initial={{ opacity: 0, scale: 0.3, y: -100, rotateX: -90 }}
-          animate={{ opacity: 1, scale: 1, y: 0, rotateX: 0 }}
+          layoutId={layoutId}
+          initial={{ opacity: 0, scale: 0.4, y: -150, x: 0, rotateX: -30 }}
+          animate={{ opacity: 1, scale: 1, y: 0, x: 0, rotateX: 0 }}
           transition={{
             type: 'spring' as const,
-            damping: 12,
-            stiffness: 200,
+            damping: 14,
+            stiffness: 120,
+            mass: 0.8,
             delay: delay * 0.1,
           }}
           className={baseClass}
@@ -125,12 +129,14 @@ export function Card({
       return (
         <motion.div
           layout
-          initial={{ opacity: 0, scale: 0.2, y: -80, x: 20 }}
+          layoutId={layoutId}
+          initial={{ opacity: 0, scale: 0.4, y: -150, x: 0 }}
           animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
           transition={{
             type: 'spring' as const,
-            damping: 10,
-            stiffness: 150,
+            damping: 14,
+            stiffness: 120,
+            mass: 0.8,
             delay: delay * 0.1,
           }}
           className={baseClass}
@@ -244,12 +250,14 @@ export function Card({
       return (
         <motion.div
           layout
-          initial={{ opacity: 0, scale: 0.2, y: -80, x: 20 }}
+          layoutId={layoutId}
+          initial={{ opacity: 0, scale: 0.4, y: -150, x: 0 }}
           animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
           transition={{
             type: 'spring' as const,
-            damping: 10,
-            stiffness: 150,
+            damping: 14,
+            stiffness: 120,
+            mass: 0.8,
             delay: delay * 0.1,
           }}
           className={baseClass}
@@ -349,12 +357,14 @@ export function Card({
     return (
       <motion.div
         layout
-        initial={{ opacity: 0, scale: 0.2, y: -80, x: 20 }}
+        layoutId={layoutId}
+        initial={{ opacity: 0, scale: 0.4, y: -150, x: 0 }}
         animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
         transition={{
           type: 'spring' as const,
-          damping: 10,
-          stiffness: 150,
+          damping: 14,
+          stiffness: 120,
+          mass: 0.8,
           delay: delay * 0.1,
         }}
         className={baseClass}

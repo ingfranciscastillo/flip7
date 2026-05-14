@@ -140,6 +140,7 @@ export function PlayerSeat({
                 animate={animate}
                 delay={isLastCard ? 0 : index * 0.05}
                 highlight={isNewCard && player.status === 'active'}
+                layoutId={isNewCard ? `deal-${c.id}` : undefined}
               />
             );
           })}
