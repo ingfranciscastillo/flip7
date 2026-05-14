@@ -23,8 +23,8 @@
     "typescript": "^6.0.3"
   },
   "dependencies": {
-    "@flip7/game-engine": "link:@flip7/game-engine",
-    "@flip7/shared": "link:@flip7/shared",
+    "@flip7/game-engine": "workspace:*",
+    "@flip7/shared": "workspace:*",
     "@neondatabase/serverless": "^1.1.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
