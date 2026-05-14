@@ -10,6 +10,7 @@ import type { ChatMessagePayload } from '@flip7/shared';
 export function useSocketLifecycle() {
   const setRoom = useGame((s) => s.setRoom);
   const setLastDealt = useGame((s) => s.setLastDealt);
+  const setLastDealtCard = useGame((s) => s.setLastDealtCard);
   const addFeedback = useFeedbackStore((s) => s.addEvent);
   const addChatMessage = useChatStore((s) => s.addMessage);
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ export function useSocketLifecycle() {
 
     const onCardDealt = (data: { playerId: string; card: { id: string } }) => {
       setLastDealt(data.card.id);
+      setLastDealtCard({ id: data.card.id, playerId: data.playerId });
       const room = useGame.getState().room;
       const p = room?.players.find((x) => x.id === data.playerId);
       addFeedback({

@@ -11,6 +11,7 @@ import { ConfettiCelebration } from '../components/ConfettiCelebration';
 import { ChatBox } from '../components/ChatBox';
 import { ConnectionStatus } from '../components/ConnectionStatus';
 import { ScoreRow } from '../components/ScoreRow';
+import { DealAnimationPortal } from '../components/DealAnimationPortal';
 
 export function meta({ params }: { params: { code?: string } }) {
   return [
@@ -76,6 +77,19 @@ export default function Game() {
       setRoundScores(null);
     }
   }, [room.phase, room.players]);
+
+  const lastDealtCard = useGame((s) => s.lastDealtCard);
+  const setLastDealtCard = useGame((s) => s.setLastDealtCard);
+
+  useEffect(() => {
+    if (lastDealtCard) {
+      const timer = setTimeout(() => {
+        setLastDealtCard(null);
+      }, 600);
+      return () => clearTimeout(timer);
+    }
+  }, [lastDealtCard, setLastDealtCard]);
+
   const pending = room.pendingTarget;
   const iAmSource = pending?.sourcePlayerId === myId;
   const turnPlayer = room.players.find(
@@ -146,6 +160,7 @@ export default function Game() {
       </div>
 
       <Table deckCount={room.deckCount} discardCount={room.discardCount} />
+      <DealAnimationPortal />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
         <AnimatePresence>

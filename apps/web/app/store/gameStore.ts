@@ -59,6 +59,8 @@ interface GameState {
   setRoom: (r: RoomState | null) => void;
   lastDealtCardId: string | null;
   setLastDealt: (id: string | null) => void;
+  lastDealtCard: { id: string; playerId: string } | null;
+  setLastDealtCard: (card: { id: string; playerId: string } | null) => void;
 }
 
 export const useGame = create<GameState>((set) => ({
@@ -66,4 +68,6 @@ export const useGame = create<GameState>((set) => ({
   setRoom: (r) => set({ room: r }),
   lastDealtCardId: null,
   setLastDealt: (id) => set({ lastDealtCardId: id }),
+  lastDealtCard: null,
+  setLastDealtCard: (card) => set({ lastDealtCard: card }),
 }));

@@ -62,7 +62,7 @@ export function Card({
   if (faceDown || !card) {
     const baseClass = clsx(
       w,
-      'rounded-xl bg-gradient-to-br from-accent to-primary border border-white/10 shadow-card flex items-center justify-center text-white font-black select-none',
+      'rounded-xl bg-primary border border-white/10 shadow-card flex items-center justify-center text-white font-black select-none',
       animate === 'shake' && 'feedback-shake',
       animate === 'glow' && 'feedback-glow',
     );
@@ -83,9 +83,7 @@ export function Card({
             delay: delay * 0.1,
           }}
           className={baseClass}
-        >
-          <span className={bounceClass}>7</span>
-        </motion.div>
+        />
       );
     }
 
@@ -97,9 +95,7 @@ export function Card({
           animate={{ opacity: 1, rotateY: 0 }}
           transition={{ duration: 0.35, delay: delay * 0.1 }}
           className={baseClass}
-        >
-          <span className={bounceClass}>7</span>
-        </motion.div>
+        />
       );
     }
 
@@ -109,9 +105,7 @@ export function Card({
         initial={{ opacity: 0, y: -8, rotateY: 90 }}
         animate={{ opacity: 1, y: 0, rotateY: 0 }}
         className={baseClass}
-      >
-        <span className={bounceClass}>7</span>
-      </motion.div>
+      />
     );
   }
 
