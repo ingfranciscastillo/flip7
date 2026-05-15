@@ -152,7 +152,7 @@ export interface ClientToServerEvents {
     ack: (res: { ok: true } | { ok: false; error: string }) => void,
   ) => void;
   'room:leave': () => void;
-  'game:start': () => void;
+  'game:start': (config?: { turnTimeLimit: number }) => void;
   'game:reset': () => void;
   'turn:hit': () => void;
   'turn:stay': () => void;
@@ -161,6 +161,7 @@ export interface ClientToServerEvents {
     payload: z.infer<typeof ChatMessageSchema>,
     ack: (res: { ok: true } | { ok: false; error: string }) => void,
   ) => void;
+  'chat:typing': () => void;
 }
 
 export interface ServerToClientEvents {
@@ -187,4 +188,5 @@ export interface ServerToClientEvents {
     action: 'freeze' | 'flip3';
   }) => void;
   'chat:message': (payload: ChatMessagePayload) => void;
+  'chat:typing': (playerId: string) => void;
 }

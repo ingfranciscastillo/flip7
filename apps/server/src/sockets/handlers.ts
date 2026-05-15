@@ -21,7 +21,22 @@ const manager = new RoomManager();
 setInterval(() => manager.sweep(), 60_000).unref?.();
 
 function emitEngineEvents(io: IO, code: string, events: EngineEvent[]) {
+  let lastCardDealtTime = 0;
+  const CARD_DEALT_DELAY = 450;
+
   for (const ev of events) {
+    if (ev.type === 'card_dealt') {
+      const now = Date.now();
+      if (lastCardDealtTime > 0 && now - lastCardDealtTime < CARD_DEALT_DELAY) {
+        const waitTime = CARD_DEALT_DELAY - (now - lastCardDealtTime);
+        const waitUntil = now + waitTime;
+        while (Date.now() < waitUntil) {
+          // busy wait - simple delay
+        }
+      }
+      lastCardDealtTime = Date.now();
+    }
+
     switch (ev.type) {
       case 'card_dealt':
         io.to(code).emit('card:dealt', {
@@ -164,27 +179,40 @@ export function registerHandlers(io: IO, socket: S) {
     currentPlayer = null;
   });
 
-  socket.on('game:start', () => {
-    if (!guard() || !currentRoom || !currentPlayer) return;
-    const room = manager.get(currentRoom);
-    if (!room) return;
-    if (room.engine.phase === 'round_end') {
-      const events = room.engine.nextRound(currentPlayer);
-      emitEngineEvents(io, currentRoom, events);
+  socket.on(
+    'game:start',
+    (config?: {
+      rounds?: number;
+      turnTimeLimit?: number;
+      deckCount?: number;
+    }) => {
+      if (!guard() || !currentRoom || !currentPlayer) return;
+      const room = manager.get(currentRoom);
+      if (!room) return;
+
+      if (room.engine.phase === 'round_end') {
+        const events = room.engine.nextRound(currentPlayer);
+        emitEngineEvents(io, currentRoom, events);
+        broadcastState(io, currentRoom);
+        return;
+      }
+
+      if (config) {
+        room.engine.setConfig(config);
+      }
+
+      const r = room.engine.startGame(currentPlayer);
+      if (!r.ok)
+        return socket.emit('error', {
+          code: 'start_failed',
+          message: r.error ?? 'failed',
+        });
+      io.to(currentRoom).emit('game:started');
+      const cur = room.engine.toRoomState().currentTurnPlayerId;
+      if (cur) io.to(currentRoom).emit('turn:changed', cur);
       broadcastState(io, currentRoom);
-      return;
-    }
-    const r = room.engine.startGame(currentPlayer);
-    if (!r.ok)
-      return socket.emit('error', {
-        code: 'start_failed',
-        message: r.error ?? 'failed',
-      });
-    io.to(currentRoom).emit('game:started');
-    const cur = room.engine.toRoomState().currentTurnPlayerId;
-    if (cur) io.to(currentRoom).emit('turn:changed', cur);
-    broadcastState(io, currentRoom);
-  });
+    },
+  );
 
   socket.on('game:reset', () => {
     if (!guard() || !currentRoom || !currentPlayer) return;
@@ -258,6 +286,11 @@ export function registerHandlers(io: IO, socket: S) {
       timestamp: Date.now(),
     });
     ack?.({ ok: true });
+  });
+
+  socket.on('chat:typing', () => {
+    if (!currentRoom || !currentPlayer) return;
+    socket.to(currentRoom).emit('chat:typing', currentPlayer);
   });
 
   socket.on('disconnect', () => {

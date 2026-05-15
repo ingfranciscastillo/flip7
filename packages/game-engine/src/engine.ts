@@ -46,6 +46,18 @@ export interface PendingTarget {
   action: 'freeze' | 'flip3';
 }
 
+export interface GameConfig {
+  rounds: number;
+  turnTimeLimit: number;
+  deckCount: number;
+}
+
+const DEFAULT_CONFIG: GameConfig = {
+  rounds: 5,
+  turnTimeLimit: 0,
+  deckCount: 1,
+};
+
 export class GameEngine {
   code: string;
   phase: RoomPhase = 'lobby';
@@ -57,11 +69,16 @@ export class GameEngine {
   round = 0;
   winnerId: string | null = null;
   pendingTarget: PendingTarget | null = null;
+  config: GameConfig = { ...DEFAULT_CONFIG };
   private rng: () => number;
 
   constructor(code: string, rng: () => number = Math.random) {
     this.code = code;
     this.rng = rng;
+  }
+
+  setConfig(config: Partial<GameConfig>) {
+    this.config = { ...this.config, ...config };
   }
 
   // -------- Lobby --------

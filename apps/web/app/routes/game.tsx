@@ -12,6 +12,7 @@ import { ChatBox } from '../components/ChatBox';
 import { ConnectionStatus } from '../components/ConnectionStatus';
 import { ScoreRow } from '../components/ScoreRow';
 import { DealAnimationPortal } from '../components/DealAnimationPortal';
+import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
 
 export function meta({ params }: { params: { code?: string } }) {
   return [
@@ -32,6 +33,8 @@ export default function Game() {
   const { code = '' } = useParams();
   const room = useGame((s) => s.room);
   const me = useIdentity();
+
+  useKeyboardShortcuts();
 
   if (!me.playerId || !me.roomCode) {
     return <Navigate to="/" replace />;

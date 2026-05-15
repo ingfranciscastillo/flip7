@@ -22,7 +22,7 @@ export function DealAnimationPortal() {
           <Card
             faceDown
             layoutId={`deal-${lastDealtCard.id}`}
-            animate="enter"
+            animate="flip3d"
           />
         </motion.div>
       )}

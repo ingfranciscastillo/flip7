@@ -5,6 +5,7 @@ import type { Card as CardT } from '@flip7/shared';
 type CardAnimation =
   | 'enter'
   | 'flip'
+  | 'flip3d'
   | 'bounce'
   | 'shake'
   | 'glow'
@@ -22,26 +23,38 @@ interface Props {
 }
 
 const numberColor = (v: number) => {
-  const hues = [220, 200, 180, 160, 140, 90, 50, 30, 20, 10, 350, 320, 280];
-  const h = hues[v] ?? 200;
-  return `oklch(0.55 0.18 ${h})`;
+  const colors: Record<number, string> = {
+    0: '#ff2f92',
+    1: '#4b5c8f',
+    2: '#e5d500',
+    3: '#ef4444',
+    4: '#27b3ff',
+    5: '#22c55e',
+    6: '#a855f7',
+    7: '#fb7185',
+    8: '#84cc16',
+    9: '#f97316',
+    10: '#ef4444',
+    11: '#60a5fa',
+    12: '#94a3b8',
+  };
+  return colors[v] ?? '#4b5c8f';
 };
 
 const modifierColor = (mod: string) => {
-  if (mod === 'x2') return 'bg-gradient-to-br from-purple-500 to-pink-500';
-  return 'bg-gradient-to-br from-yellow-400 to-amber-500';
+  return 'bg-[#ffb020]';
 };
 
 const actionBg = (action: string) => {
   switch (action) {
-    case 'freeze':
-      return 'bg-gradient-to-br from-cyan-400 to-blue-500';
     case 'flip3':
-      return 'bg-gradient-to-br from-orange-400 to-red-500';
+      return 'bg-[#ffe74a]';
+    case 'freeze':
+      return 'bg-[#7dd3fc]';
     case 'second_chance':
-      return 'bg-gradient-to-br from-green-400 to-emerald-500';
+      return 'bg-[#ff8fa3]';
     default:
-      return 'bg-gradient-to-br from-accent to-blue-600';
+      return 'bg-[#ffb020]';
   }
 };
 
@@ -60,13 +73,12 @@ export function Card({
   const w = small ? 'w-12 h-16 text-base' : 'w-20 h-28 text-3xl';
 
   if (faceDown || !card) {
-    const baseClass = clsx(
+    const backClass = clsx(
       w,
-      'rounded-xl bg-primary border border-white/10 shadow-card flex items-center justify-center text-white font-black select-none',
+      'rounded-xl bg-primary border border-white/10 shadow-card flex items-center justify-center',
       animate === 'shake' && 'feedback-shake',
       animate === 'glow' && 'feedback-glow',
     );
-    const bounceClass = getBounceTextClass(animate);
 
     if (animate === 'enter') {
       return (
@@ -82,7 +94,7 @@ export function Card({
             mass: 0.8,
             delay: delay * 0.1,
           }}
-          className={baseClass}
+          className={backClass}
         />
       );
     }
@@ -91,10 +103,41 @@ export function Card({
       return (
         <motion.div
           layout
-          initial={{ opacity: 0, rotateY: 180 }}
-          animate={{ opacity: 1, rotateY: 0 }}
-          transition={{ duration: 0.35, delay: delay * 0.1 }}
-          className={baseClass}
+          initial={{ opacity: 0, rotateY: 180, scale: 0.5, rotateX: 15 }}
+          animate={{
+            opacity: 1,
+            rotateY: [180, 0, -5, 0],
+            scale: [0.5, 1.05, 0.98, 1],
+            rotateX: [15, 0, 0, 0],
+          }}
+          transition={{
+            duration: 0.8,
+            times: [0, 0.7, 0.85, 1],
+            delay: delay * 0.1,
+          }}
+          className={backClass}
+        />
+      );
+    }
+
+    if (animate === 'flip3d') {
+      return (
+        <motion.div
+          layout
+          layoutId={layoutId}
+          initial={{ opacity: 0, rotateY: 90, scale: 0.8, y: 30 }}
+          animate={{
+            opacity: [0, 1, 1],
+            rotateY: [90, -10, 0],
+            scale: [0.8, 1.08, 1],
+            y: [30, -10, 0],
+          }}
+          transition={{
+            duration: 0.5,
+            times: [0, 0.6, 1],
+            delay: delay * 0.1,
+          }}
+          className={backClass}
         />
       );
     }
@@ -104,7 +147,7 @@ export function Card({
         layout
         initial={{ opacity: 0, y: -8, rotateY: 90 }}
         animate={{ opacity: 1, y: 0, rotateY: 0 }}
-        className={baseClass}
+        className={backClass}
       />
     );
   }
@@ -145,9 +188,43 @@ export function Card({
       return (
         <motion.div
           layout
-          initial={{ opacity: 0, rotateY: 180, scale: 0.8 }}
-          animate={{ opacity: 1, rotateY: 0, scale: 1 }}
-          transition={{ duration: 0.4, delay: delay * 0.1 }}
+          initial={{ opacity: 0, rotateY: 180, scale: 0.5, rotateX: 15 }}
+          animate={{
+            opacity: 1,
+            rotateY: [180, 0, -5, 0],
+            scale: [0.5, 1.05, 0.98, 1],
+            rotateX: [15, 0, 0, 0],
+          }}
+          transition={{
+            duration: 0.8,
+            times: [0, 0.7, 0.85, 1],
+            delay: delay * 0.1,
+          }}
+          className={baseClass}
+          style={{ background: numberColor(card.value) }}
+        >
+          <span className={bounceClass}>{card.value}</span>
+        </motion.div>
+      );
+    }
+
+    if (animate === 'flip3d') {
+      return (
+        <motion.div
+          layout
+          layoutId={layoutId}
+          initial={{ opacity: 0, rotateY: 90, scale: 0.8, y: 30 }}
+          animate={{
+            opacity: [0, 1, 1],
+            rotateY: [90, -10, 0],
+            scale: [0.8, 1.08, 1],
+            y: [30, -10, 0],
+          }}
+          transition={{
+            duration: 0.5,
+            times: [0, 0.6, 1],
+            delay: delay * 0.1,
+          }}
           className={baseClass}
           style={{ background: numberColor(card.value) }}
         >
@@ -252,6 +329,35 @@ export function Card({
             damping: 14,
             stiffness: 120,
             mass: 0.8,
+            delay: delay * 0.1,
+          }}
+          className={baseClass}
+        >
+          <span className={bounceClass}>{card.modifier}</span>
+          {!small && (
+            <span className="text-[8px] mt-0.5 opacity-80 font-normal">
+              {modifierSub}
+            </span>
+          )}
+        </motion.div>
+      );
+    }
+
+    if (animate === 'flip3d') {
+      return (
+        <motion.div
+          layout
+          layoutId={layoutId}
+          initial={{ opacity: 0, rotateY: 90, scale: 0.8, y: 30 }}
+          animate={{
+            opacity: [0, 1, 1],
+            rotateY: [90, -10, 0],
+            scale: [0.8, 1.08, 1],
+            y: [30, -10, 0],
+          }}
+          transition={{
+            duration: 0.5,
+            times: [0, 0.6, 1],
             delay: delay * 0.1,
           }}
           className={baseClass}
@@ -391,6 +497,31 @@ export function Card({
         className={clsx(baseClass, 'feedback-glow')}
       >
         <span className="feedback-glow">{label}</span>
+        {!small && <span className="text-[10px] mt-1 opacity-90">{sub}</span>}
+      </motion.div>
+    );
+  }
+
+  if (animate === 'flip3d') {
+    return (
+      <motion.div
+        layout
+        layoutId={layoutId}
+        initial={{ opacity: 0, rotateY: 90, scale: 0.8, y: 30 }}
+        animate={{
+          opacity: [0, 1, 1],
+          rotateY: [90, -10, 0],
+          scale: [0.8, 1.08, 1],
+          y: [30, -10, 0],
+        }}
+        transition={{
+          duration: 0.5,
+          times: [0, 0.6, 1],
+          delay: delay * 0.1,
+        }}
+        className={baseClass}
+      >
+        <span className="feedback-pop">{label}</span>
         {!small && <span className="text-[10px] mt-1 opacity-90">{sub}</span>}
       </motion.div>
     );

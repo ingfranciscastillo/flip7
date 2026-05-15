@@ -1,13 +1,19 @@
+import { useState } from 'react';
 import { Link, useParams, Navigate } from 'react-router';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'motion/react';
-import { Copy01FreeIcons, UserMultipleIcon } from '@hugeicons/core-free-icons';
+import {
+  Copy01FreeIcons,
+  UserMultipleIcon,
+  Settings01Icon,
+} from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { getSocket } from '../lib/socket';
 import { useGame, useIdentity } from '../store/gameStore';
 import { ConfettiCelebration } from '../components/ConfettiCelebration';
 import { ChatBox } from '../components/ChatBox';
 import { ConnectionStatus } from '../components/ConnectionStatus';
+import { GameSettings } from '../components/GameSettings';
 
 export function meta({ params }: { params: { code?: string } }) {
   return [
@@ -35,13 +41,24 @@ export default function Lobby() {
 
   const isHost = room?.hostId === me.playerId;
   const enoughPlayers = (room?.players.length ?? 0) >= 3;
+  const [showSettings, setShowSettings] = useState(false);
 
   const copy = async () => {
     await navigator.clipboard.writeText(code);
     toast.success('Código copiado');
   };
 
-  const start = () => getSocket().emit('game:start');
+  const start = () => {
+    if (isHost) {
+      setShowSettings(true);
+    }
+  };
+
+  const handleStartGame = (config: { turnTimeLimit: number }) => {
+    getSocket().emit('game:start', config);
+    setShowSettings(false);
+  };
+
   const leave = () => {
     getSocket().emit('room:leave');
     me.clearIdentity();
@@ -123,6 +140,11 @@ export default function Lobby() {
       </div>
       <ConfettiCelebration />
       <ChatBox roomCode={code} />
+      <GameSettings
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+        onStart={handleStartGame}
+      />
     </div>
   );
 }

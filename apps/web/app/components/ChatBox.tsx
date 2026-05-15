@@ -13,12 +13,26 @@ export function ChatBox({ roomCode }: Props) {
   const messages = useChatStore((s) => s.messages);
   const isOpen = useChatStore((s) => s.isOpen);
   const lastSeenTimestamp = useChatStore((s) => s.lastSeenTimestamp);
+  const typingUsers = useChatStore((s) => s.typingUsers);
   const toggleOpen = useChatStore((s) => s.toggleOpen);
   const me = useIdentity();
   const [input, setInput] = useState('');
   const [isSending, setIsSending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInput(e.target.value.slice(0, 200));
+
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    typingTimeoutRef.current = setTimeout(() => {
+      getSocket().emit('chat:typing');
+    }, 500);
+  };
 
   const hasNewMessages = messages.some(
     (m) => m.playerId !== me.playerId && m.timestamp > lastSeenTimestamp,
@@ -141,40 +155,66 @@ export function ChatBox({ roomCode }: Props) {
                   No hay mensajes aún. ¡Sé el primero!
                 </p>
               ) : (
-                messages.map((msg) => {
-                  const isMe = msg.playerId === me.playerId;
-                  return (
+                <>
+                  {messages.map((msg) => {
+                    const isMe = msg.playerId === me.playerId;
+                    return (
+                      <motion.div
+                        key={msg.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className={clsx(
+                          'flex flex-col',
+                          isMe ? 'items-end' : 'items-start',
+                        )}
+                      >
+                        <div
+                          className={clsx(
+                            'flex items-center gap-1.5 text-xs text-muted',
+                          )}
+                        >
+                          <span>{msg.emoji}</span>
+                          <span className="font-medium">{msg.playerName}</span>
+                          <span>{formatTime(msg.timestamp)}</span>
+                        </div>
+                        <div
+                          className={clsx(
+                            'mt-1 px-3 py-2 rounded-xl text-sm max-w-[85%]',
+                            isMe
+                              ? 'bg-primary text-white rounded-br-sm'
+                              : 'bg-surface2 text-ink rounded-bl-sm',
+                          )}
+                        >
+                          {msg.message}
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+
+                  {typingUsers.length > 0 && (
                     <motion.div
-                      key={msg.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className={clsx(
-                        'flex flex-col',
-                        isMe ? 'items-end' : 'items-start',
-                      )}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="flex items-center gap-1 text-xs text-muted py-1"
                     >
-                      <div
-                        className={clsx(
-                          'flex items-center gap-1.5 text-xs text-muted',
-                        )}
-                      >
-                        <span>{msg.emoji}</span>
-                        <span className="font-medium">{msg.playerName}</span>
-                        <span>{formatTime(msg.timestamp)}</span>
-                      </div>
-                      <div
-                        className={clsx(
-                          'mt-1 px-3 py-2 rounded-xl text-sm max-w-[85%]',
-                          isMe
-                            ? 'bg-primary text-white rounded-br-sm'
-                            : 'bg-surface2 text-ink rounded-bl-sm',
-                        )}
-                      >
-                        {msg.message}
-                      </div>
+                      <span className="flex gap-0.5">
+                        <span
+                          className="w-1.5 h-1.5 bg-muted rounded-full animate-bounce"
+                          style={{ animationDelay: '0ms' }}
+                        />
+                        <span
+                          className="w-1.5 h-1.5 bg-muted rounded-full animate-bounce"
+                          style={{ animationDelay: '150ms' }}
+                        />
+                        <span
+                          className="w-1.5 h-1.5 bg-muted rounded-full animate-bounce"
+                          style={{ animationDelay: '300ms' }}
+                        />
+                      </span>
+                      <span>escribiendo...</span>
                     </motion.div>
-                  );
-                })
+                  )}
+                </>
               )}
               <div ref={messagesEndRef} />
             </div>
@@ -190,7 +230,7 @@ export function ChatBox({ roomCode }: Props) {
                 ref={inputRef}
                 type="text"
                 value={input}
-                onChange={(e) => setInput(e.target.value.slice(0, 200))}
+                onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
                 placeholder="Escribe un mensaje..."
                 className="flex-1 bg-surface2 rounded-lg px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary placeholder:text-muted/50"

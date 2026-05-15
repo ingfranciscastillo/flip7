@@ -139,6 +139,14 @@ export function useSocketLifecycle() {
         emoji: payload.emoji,
         message: payload.message,
       });
+      useChatStore.getState().setTyping(payload.playerId, false);
+    };
+
+    const onTyping = (playerId: string) => {
+      useChatStore.getState().setTyping(playerId, true);
+      setTimeout(() => {
+        useChatStore.getState().setTyping(playerId, false);
+      }, 3000);
     };
 
     const onConnect = () => {
@@ -172,6 +180,7 @@ export function useSocketLifecycle() {
     socket.on('player:disconnected', onDisconnected);
     socket.on('player:reconnected', onReconnected);
     socket.on('chat:message', onChatMessage);
+    socket.on('chat:typing', onTyping);
 
     return () => {
       socket.off('connect', onConnect);
@@ -190,6 +199,7 @@ export function useSocketLifecycle() {
       socket.off('player:disconnected', onDisconnected);
       socket.off('player:reconnected', onReconnected);
       socket.off('chat:message', onChatMessage);
+      socket.off('chat:typing', onTyping);
     };
   }, [setRoom, setLastDealt, addFeedback, addChatMessage, navigate]);
 }

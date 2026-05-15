@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import { motion, AnimatePresence } from 'motion/react';
 import type { PlayerPublic } from '@flip7/shared';
 import { Card } from './Card';
+import { CardTooltip } from './CardTooltip';
 import { useGame } from '../store/gameStore';
 
 interface Props {
@@ -133,15 +134,16 @@ export function PlayerSeat({
             }
 
             return (
-              <Card
-                key={c.id}
-                card={c}
-                small
-                animate={animate}
-                delay={isLastCard ? 0 : index * 0.05}
-                highlight={isNewCard && player.status === 'active'}
-                layoutId={isNewCard ? `deal-${c.id}` : undefined}
-              />
+              <CardTooltip key={c.id} card={c}>
+                <Card
+                  card={c}
+                  small
+                  animate={animate}
+                  delay={isLastCard ? 0 : index * 0.05}
+                  highlight={isNewCard && player.status === 'active'}
+                  layoutId={isNewCard ? `deal-${c.id}` : undefined}
+                />
+              </CardTooltip>
             );
           })}
         </AnimatePresence>
