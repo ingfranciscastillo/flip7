@@ -53,7 +53,6 @@ export function useSocketLifecycle() {
         playerName: p?.name,
         playerEmoji: p?.emoji,
       });
-      toast.error(`${p?.emoji ?? ''} ${p?.name ?? 'Jugador'} se pasó!`);
     };
 
     const onFlip7 = (id: string) => {
@@ -64,7 +63,6 @@ export function useSocketLifecycle() {
         playerName: p?.name,
         playerEmoji: p?.emoji,
       });
-      toast.success(`🔥 ${p?.name ?? 'Jugador'} hizo Flip 7!`);
     };
 
     const onFrozen = (id: string) => {
@@ -75,7 +73,6 @@ export function useSocketLifecycle() {
         playerName: p?.name,
         playerEmoji: p?.emoji,
       });
-      toast.warning(`${p?.emoji ?? ''} ${p?.name ?? 'Jugador'} fue congelado!`);
     };
 
     const onStayed = (id: string) => {
@@ -106,7 +103,6 @@ export function useSocketLifecycle() {
         playerName: p?.name,
         playerEmoji: p?.emoji,
       });
-      toast.success(`🏆 ${p?.name ?? 'Jugador'} ganó la partida!`);
     };
 
     const onRoundEnd = () => {
@@ -115,12 +111,9 @@ export function useSocketLifecycle() {
 
     const onGameStarted = () => {
       addFeedback({ type: 'game_start' });
-      toast.info('¡El host ha iniciado una nueva partida!');
     };
 
-    const onGameReset = () => {
-      toast.info('La sala ha sido reiniciada');
-    };
+    const onGameReset = () => {};
 
     const onDisconnected = (id: string) => {
       const p = useGame.getState().room?.players.find((x) => x.id === id);
@@ -130,6 +123,16 @@ export function useSocketLifecycle() {
     const onReconnected = (id: string) => {
       const p = useGame.getState().room?.players.find((x) => x.id === id);
       toast.success(`${p?.emoji ?? ''} ${p?.name ?? 'Jugador'} se reconectó`);
+    };
+
+    const onJoined = (id: string) => {
+      const p = useGame.getState().room?.players.find((x) => x.id === id);
+      addFeedback({
+        type: 'joined',
+        playerId: id,
+        playerName: p?.name,
+        playerEmoji: p?.emoji,
+      });
     };
 
     const onChatMessage = (payload: ChatMessagePayload) => {
@@ -179,6 +182,7 @@ export function useSocketLifecycle() {
     socket.on('game:reset', onGameReset);
     socket.on('player:disconnected', onDisconnected);
     socket.on('player:reconnected', onReconnected);
+    socket.on('player:joined', onJoined);
     socket.on('chat:message', onChatMessage);
     socket.on('chat:typing', onTyping);
 
@@ -198,6 +202,7 @@ export function useSocketLifecycle() {
       socket.off('game:reset', onGameReset);
       socket.off('player:disconnected', onDisconnected);
       socket.off('player:reconnected', onReconnected);
+      socket.off('player:joined', onJoined);
       socket.off('chat:message', onChatMessage);
       socket.off('chat:typing', onTyping);
     };

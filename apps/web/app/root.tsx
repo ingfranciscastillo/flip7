@@ -11,6 +11,7 @@ import type { Route } from './+types/root';
 import './app.css';
 import { Toaster } from 'sonner';
 import { useSocketLifecycle } from './hooks/useSocket';
+import { AnnouncementOverlay } from './components/AnnouncementOverlay';
 
 const BASE_URL = 'https://flip7-web.vercel.app';
 
@@ -62,6 +63,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         {children}
+        <AnnouncementOverlay />
         <ScrollRestoration />
         <Scripts />
         <Toaster position="top-center" richColors />

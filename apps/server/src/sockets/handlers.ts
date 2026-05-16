@@ -123,6 +123,7 @@ export function registerHandlers(io: IO, socket: S) {
     currentRoom = room.code;
     currentPlayer = playerId;
     ack({ ok: true, playerId });
+    io.to(room.code).emit('player:joined', playerId);
     broadcastState(io, room.code);
   });
 

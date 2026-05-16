@@ -181,6 +181,7 @@ export interface ServerToClientEvents {
   'game:ended': (winnerId: string) => void;
   'player:disconnected': (playerId: string) => void;
   'player:reconnected': (playerId: string) => void;
+  'player:joined': (playerId: string) => void;
   error: (payload: z.infer<typeof ErrorPayloadSchema>) => void;
   'card:target-required': (data: {
     sourcePlayerId: string;

@@ -11,7 +11,8 @@ export type FeedbackEvent = {
     | 'stay'
     | 'round_end'
     | 'game_end'
-    | 'game_start';
+    | 'game_start'
+    | 'joined';
   playerId?: string;
   playerName?: string;
   playerEmoji?: string;
@@ -49,6 +50,7 @@ export const useFeedbackStore = create<FeedbackState>((set, get) => ({
       'round_end',
       'game_end',
       'game_start',
+      'joined',
     ].includes(event.type);
 
     set((state) => ({
