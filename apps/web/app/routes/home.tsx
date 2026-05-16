@@ -128,6 +128,7 @@ export default function Home() {
           <button
             className="btn-primary w-full"
             disabled={loading}
+            aria-disabled={loading}
             onClick={create}
           >
             Crear sala
@@ -147,7 +148,12 @@ export default function Home() {
               maxLength={6}
               onChange={(e) => setCode(e.target.value.toUpperCase())}
             />
-            <button className="btn-ghost" disabled={loading} onClick={join}>
+            <button
+              className="btn-ghost"
+              disabled={loading}
+              aria-disabled={loading}
+              onClick={join}
+            >
               Entrar
             </button>
           </div>

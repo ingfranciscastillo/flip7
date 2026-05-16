@@ -1,5 +1,4 @@
 import { useEffect, useCallback, useRef } from 'react';
-import confetti from 'canvas-confetti';
 import { useFeedbackStore } from '../store/feedbackStore';
 
 interface ConfettiOptions {
@@ -10,6 +9,18 @@ interface ConfettiOptions {
 
 const SUBTLE_COLORS = ['#e11d48', '#fbbf24', '#2563eb', '#22c55e', '#ffffff'];
 
+type ConfettiModule = {
+  default: (...args: Parameters<typeof import('canvas-confetti')>) => void;
+};
+let confettiImport: Promise<ConfettiModule> | null = null;
+
+function getConfetti() {
+  if (!confettiImport) {
+    confettiImport = import('canvas-confetti');
+  }
+  return confettiImport;
+}
+
 function matchesMedia(): boolean {
   if (typeof window === 'undefined') return true;
   return !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -18,7 +29,7 @@ function matchesMedia(): boolean {
 export function useConfetti() {
   const lastTriggerRef = useRef<number>(0);
 
-  const burst = useCallback((options: ConfettiOptions = {}) => {
+  const burst = useCallback(async (options: ConfettiOptions = {}) => {
     if (!matchesMedia()) return;
 
     const now = Date.now();
@@ -27,7 +38,8 @@ export function useConfetti() {
 
     const { particleCount = 30, spread = 50, colors = SUBTLE_COLORS } = options;
 
-    confetti({
+    const mod = await getConfetti();
+    mod.default({
       particleCount,
       spread,
       colors,
@@ -39,7 +51,7 @@ export function useConfetti() {
     });
   }, []);
 
-  const flip7Celebrate = useCallback(() => {
+  const flip7Celebrate = useCallback(async () => {
     if (!matchesMedia()) return;
 
     const defaults = {
@@ -51,7 +63,8 @@ export function useConfetti() {
       colors: ['#fbbf24', '#f59e0b', '#ffffff'],
     };
 
-    confetti({
+    const mod = await getConfetti();
+    mod.default({
       ...defaults,
       particleCount: 40,
       scalar: 1,
@@ -59,7 +72,7 @@ export function useConfetti() {
     });
 
     setTimeout(() => {
-      confetti({
+      mod.default({
         ...defaults,
         particleCount: 20,
         scalar: 0.75,
@@ -68,7 +81,7 @@ export function useConfetti() {
     }, 200);
   }, []);
 
-  const gameEndCelebrate = useCallback(() => {
+  const gameEndCelebrate = useCallback(async () => {
     if (!matchesMedia()) return;
 
     const defaults = {
@@ -81,9 +94,9 @@ export function useConfetti() {
     };
 
     const duration = 2000;
-    const end = Date.now() + duration;
+    const mod = await getConfetti();
     const interval = setInterval(() => {
-      confetti({
+      mod.default({
         ...defaults,
         particleCount: 25,
         scalar: 1.2,
@@ -94,10 +107,11 @@ export function useConfetti() {
     setTimeout(() => clearInterval(interval), duration);
   }, []);
 
-  const gameStartCelebrate = useCallback(() => {
+  const gameStartCelebrate = useCallback(async () => {
     if (!matchesMedia()) return;
 
-    confetti({
+    const mod = await getConfetti();
+    mod.default({
       particleCount: 50,
       spread: 80,
       colors: ['#e11d48', '#2563eb', '#ffffff'],
@@ -109,10 +123,11 @@ export function useConfetti() {
     });
   }, []);
 
-  const roundEndCelebrate = useCallback(() => {
+  const roundEndCelebrate = useCallback(async () => {
     if (!matchesMedia()) return;
 
-    confetti({
+    const mod = await getConfetti();
+    mod.default({
       particleCount: 35,
       spread: 60,
       colors: ['#2563eb', '#22c55e', '#ffffff'],

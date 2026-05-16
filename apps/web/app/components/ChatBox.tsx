@@ -44,6 +44,14 @@ export function ChatBox({ roomCode }: Props) {
     }
   }, [messages, isOpen]);
 
+  useEffect(() => {
+    return () => {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const sendMessage = () => {
     const trimmed = input.trim();
     if (!trimmed || isSending) return;
