@@ -60,7 +60,7 @@ export function ScoreRow({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: delay + 0.2, duration: 0.3 }}
-      className={`flex justify-between items-center py-1 ${
+      className={`flex justify-between items-center py-1 relative ${
         isCurrent ? 'bg-accent/10 -mx-2 px-2 rounded-lg' : ''
       }`}
     >
@@ -77,7 +77,7 @@ export function ScoreRow({
             initial={{ opacity: 1, y: 0, scale: 1 }}
             animate={{ opacity: 0, y: -16, scale: 1.2 }}
             transition={{ duration: 0.8 }}
-            className="text-success font-bold text-sm fixed z-[60] right-8"
+            className="text-success font-bold text-sm absolute z-[60] right-0 -top-2"
           >
             +{increment}
           </motion.span>
