@@ -1,4 +1,4 @@
-import { useParams, Navigate } from 'react-router';
+import { useParams, Navigate, useNavigate } from 'react-router';
 import { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { getSocket } from '../lib/socket';
@@ -33,6 +33,7 @@ export default function Game() {
   const { code = '' } = useParams();
   const room = useGame((s) => s.room);
   const me = useIdentity();
+  const navigate = useNavigate();
 
   useKeyboardShortcuts();
 
@@ -111,7 +112,7 @@ export default function Game() {
   const leaveGame = () => {
     getSocket().emit('room:leave');
     me.clearIdentity();
-    window.location.href = '/';
+    navigate('/');
   };
   const resetGame = () => {
     if (

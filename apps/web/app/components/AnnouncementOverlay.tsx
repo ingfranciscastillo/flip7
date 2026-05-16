@@ -1,5 +1,8 @@
 import { AnimatePresence, motion } from 'motion/react';
-import { useActiveAnnouncements } from '../store/feedbackStore';
+import {
+  useActiveAnnouncements,
+  useFeedbackStore,
+} from '../store/feedbackStore';
 import type { FeedbackEvent } from '../store/feedbackStore';
 
 interface AnnouncementProps {
@@ -86,7 +89,6 @@ function Announcement({ event, onComplete }: AnnouncementProps) {
       exit={{ opacity: 0, x: 100, scale: 0.8, transition: { duration: 0.2 } }}
       transition={{ type: 'spring', damping: 20, stiffness: 300 }}
       className={`fixed bottom-4 right-4 z-50 flex pointer-events-none ${config.container}`}
-      role="alert"
       aria-live="polite"
     >
       <motion.div
@@ -138,9 +140,7 @@ export function AnnouncementOverlay() {
           key={event.id}
           event={event}
           onComplete={(id) => {
-            const store =
-              require('../store/feedbackStore').useFeedbackStore.getState();
-            store.clearAnnouncement(id);
+            useFeedbackStore.getState().clearAnnouncement(id);
           }}
         />
       ))}

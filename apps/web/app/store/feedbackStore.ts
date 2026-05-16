@@ -23,6 +23,7 @@ export type FeedbackEvent = {
 interface FeedbackState {
   events: FeedbackEvent[];
   announcements: FeedbackEvent[];
+  timeoutIds: Map<string, ReturnType<typeof setTimeout>>;
   addEvent: (event: Omit<FeedbackEvent, 'id' | 'timestamp'>) => void;
   clearAnnouncement: (id: string) => void;
   clearOldEvents: () => void;
@@ -34,6 +35,7 @@ const ANNOUNCEMENT_DURATION = 2000;
 export const useFeedbackStore = create<FeedbackState>((set, get) => ({
   events: [],
   announcements: [],
+  timeoutIds: new Map(),
 
   addEvent: (event) => {
     const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -61,13 +63,20 @@ export const useFeedbackStore = create<FeedbackState>((set, get) => ({
     }));
 
     if (isMajor) {
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         get().clearAnnouncement(id);
+        get().timeoutIds.delete(id);
       }, ANNOUNCEMENT_DURATION);
+      get().timeoutIds.set(id, timeoutId);
     }
   },
 
   clearAnnouncement: (id) => {
+    const timeoutId = get().timeoutIds.get(id);
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      get().timeoutIds.delete(id);
+    }
     set((state) => ({
       announcements: state.announcements.filter((a) => a.id !== id),
     }));

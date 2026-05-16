@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useParams, Navigate } from 'react-router';
+import { Link, useParams, Navigate, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'motion/react';
 import {
@@ -42,6 +42,7 @@ export default function Lobby() {
   const isHost = room?.hostId === me.playerId;
   const enoughPlayers = (room?.players.length ?? 0) >= 3;
   const [showSettings, setShowSettings] = useState(false);
+  const navigate = useNavigate();
 
   const copy = async () => {
     await navigator.clipboard.writeText(code);
@@ -62,7 +63,7 @@ export default function Lobby() {
   const leave = () => {
     getSocket().emit('room:leave');
     me.clearIdentity();
-    window.location.href = '/';
+    navigate('/');
   };
 
   return (

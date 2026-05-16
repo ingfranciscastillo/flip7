@@ -5,6 +5,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useNavigation,
 } from 'react-router';
 
 import type { Route } from './+types/root';
@@ -62,6 +63,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
+        <NavigationBar />
         {children}
         <AnnouncementOverlay />
         <ScrollRestoration />
@@ -69,6 +71,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Toaster position="top-center" richColors />
       </body>
     </html>
+  );
+}
+
+function NavigationBar() {
+  const navigation = useNavigation();
+  const isNavigating = navigation.state === 'loading';
+
+  return (
+    <div
+      className="fixed top-0 left-0 right-0 z-[100] h-1 bg-transparent"
+      aria-hidden="true"
+    >
+      {isNavigating && <div className="h-full bg-primary animate-pulse" />}
+    </div>
   );
 }
 

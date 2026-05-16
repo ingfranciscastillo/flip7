@@ -54,7 +54,20 @@ export function CardTooltip({ card, children }: CardTooltipProps) {
       className="relative"
       onMouseEnter={() => setShow(true)}
       onMouseLeave={() => setShow(false)}
-      onClick={() => setShow(!show)}
+      onFocus={() => setShow(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) {
+          setShow(false);
+        }
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') {
+          setShow(false);
+        }
+      }}
+      tabIndex={0}
+      role="button"
+      aria-label="Ver descripción de carta"
     >
       {children}
       {show && description && (

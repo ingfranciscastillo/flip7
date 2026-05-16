@@ -25,7 +25,7 @@ function Stack({ count, label }: { count: number; label: string }) {
             }
             transition={{ duration: 0.3 }}
             className={`
-              w-16 h-22 md:w-20 md:h-28 rounded-xl border border-white/10
+              w-16 h-20 md:w-20 md:h-28 rounded-xl border border-white/10
               bg-gradient-to-br from-primary to-primary
               shadow-card
               ${i === 0 ? 'relative z-10' : `absolute ${i === 1 ? '-top-1 -right-1' : '-top-2 -right-2'} opacity-70`}

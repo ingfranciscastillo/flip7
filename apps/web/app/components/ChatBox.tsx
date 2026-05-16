@@ -140,7 +140,7 @@ export function ChatBox({ roomCode }: Props) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ type: 'spring', damping: 20, stiffness: 300 }}
-            className="fixed bottom-32 right-4 z-40 w-80 max-h-96 bg-surface rounded-2xl shadow-xl flex flex-col overflow-hidden border border-white/10"
+            className="fixed bottom-32 right-4 z-40 w-full max-w-[85vw] sm:w-80 max-h-96 bg-surface rounded-2xl shadow-xl flex flex-col overflow-hidden border border-white/10"
           >
             <div className="p-3 bg-surface2 border-b border-white/5 flex items-center justify-between">
               <h3 className="font-bold text-sm">Chat de sala</h3>
