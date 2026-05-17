@@ -311,7 +311,13 @@ export function registerHandlers(io: IO, socket: S) {
     const anyoneOnline = room.engine.players.some((p) => p.connected);
 
     if (!anyoneOnline) {
-      manager.delete(currentRoom);
+      const roomCode = currentRoom!;
+      setTimeout(() => {
+        const r = manager.get(roomCode);
+        if (r && !r.engine.players.some((p) => p.connected)) {
+          manager.delete(roomCode);
+        }
+      }, 60_000);
     }
   });
 }
