@@ -61,6 +61,8 @@ interface GameState {
   setLastDealt: (id: string | null) => void;
   lastDealtCard: { id: string; playerId: string } | null;
   setLastDealtCard: (card: { id: string; playerId: string } | null) => void;
+  turnTimeRemaining: number;
+  setTurnTimeRemaining: (remaining: number) => void;
 }
 
 export const useGame = create<GameState>((set) => ({
@@ -70,4 +72,6 @@ export const useGame = create<GameState>((set) => ({
   setLastDealt: (id) => set({ lastDealtCardId: id }),
   lastDealtCard: null,
   setLastDealtCard: (card) => set({ lastDealtCard: card }),
+  turnTimeRemaining: 0,
+  setTurnTimeRemaining: (remaining) => set({ turnTimeRemaining: remaining }),
 }));

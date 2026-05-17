@@ -11,6 +11,7 @@ export function useSocketLifecycle() {
   const setRoom = useGame((s) => s.setRoom);
   const setLastDealt = useGame((s) => s.setLastDealt);
   const setLastDealtCard = useGame((s) => s.setLastDealtCard);
+  const setTurnTimeRemaining = useGame((s) => s.setTurnTimeRemaining);
   const addFeedback = useFeedbackStore((s) => s.addEvent);
   const addChatMessage = useChatStore((s) => s.addMessage);
   const navigate = useNavigate();
@@ -152,6 +153,13 @@ export function useSocketLifecycle() {
       }, 3000);
     };
 
+    const onTurnTimeupdate = (data: {
+      playerId: string;
+      remaining: number;
+    }) => {
+      setTurnTimeRemaining(data.remaining);
+    };
+
     const onConnect = () => {
       const id = useIdentity.getState();
       if (id.playerId && id.roomCode) {
@@ -183,6 +191,7 @@ export function useSocketLifecycle() {
     socket.on('player:disconnected', onDisconnected);
     socket.on('player:reconnected', onReconnected);
     socket.on('player:joined', onJoined);
+    socket.on('turn:timeupdate', onTurnTimeupdate);
     socket.on('chat:message', onChatMessage);
     socket.on('chat:typing', onTyping);
 
@@ -196,6 +205,7 @@ export function useSocketLifecycle() {
       socket.off('player:frozen', onFrozen);
       socket.off('player:flip7', onFlip7);
       socket.off('turn:changed', onTurnChanged);
+      socket.off('turn:timeupdate', onTurnTimeupdate);
       socket.off('game:ended', onGameEnd);
       socket.off('round:ended', onRoundEnd);
       socket.off('game:started', onGameStarted);

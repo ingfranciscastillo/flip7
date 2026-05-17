@@ -169,6 +169,7 @@ export interface ServerToClientEvents {
   'game:started': () => void;
   'game:reset': () => void;
   'turn:changed': (playerId: string) => void;
+  'turn:timeupdate': (data: { playerId: string; remaining: number }) => void;
   'card:dealt': (data: { playerId: string; card: Card }) => void;
   'player:busted': (playerId: string) => void;
   'player:stayed': (playerId: string) => void;

@@ -20,6 +20,52 @@ type S = Socket<ClientToServerEvents, ServerToClientEvents>;
 const manager = new RoomManager();
 setInterval(() => manager.sweep(), 60_000).unref?.();
 
+const turnTimers = new Map<
+  string,
+  { intervalId: ReturnType<typeof setInterval>; playerId: string }
+>();
+
+function startTurnTimer(
+  io: IO,
+  roomCode: string,
+  playerId: string,
+  limit: number,
+) {
+  stopTurnTimer(roomCode);
+
+  let remaining = limit;
+  io.to(roomCode).emit('turn:timeupdate', { playerId, remaining });
+
+  const intervalId = setInterval(() => {
+    remaining -= 1000;
+    io.to(roomCode).emit('turn:timeupdate', { playerId, remaining });
+
+    if (remaining <= 0) {
+      clearInterval(intervalId);
+      const room = manager.get(roomCode);
+      if (room) {
+        const state = room.engine.toRoomState();
+        if (state.currentTurnPlayerId === playerId) {
+          const events = room.engine.stay(playerId);
+          emitEngineEvents(io, roomCode, events);
+          broadcastState(io, roomCode);
+        }
+      }
+      turnTimers.delete(roomCode);
+    }
+  }, 1000);
+
+  turnTimers.set(roomCode, { intervalId, playerId });
+}
+
+function stopTurnTimer(roomCode: string) {
+  const timer = turnTimers.get(roomCode);
+  if (timer) {
+    clearInterval(timer.intervalId);
+    turnTimers.delete(roomCode);
+  }
+}
+
 function emitEngineEvents(io: IO, code: string, events: EngineEvent[]) {
   let lastCardDealtTime = 0;
   const CARD_DEALT_DELAY = 450;
@@ -58,6 +104,13 @@ function emitEngineEvents(io: IO, code: string, events: EngineEvent[]) {
         break;
       case 'turn_changed':
         io.to(code).emit('turn:changed', ev.playerId);
+        const turnRoom = manager.get(code);
+        if (turnRoom) {
+          const limit = turnRoom.engine.config.turnTimeLimit;
+          if (limit > 0 && !turnRoom.engine.pendingTarget) {
+            startTurnTimer(io, code, ev.playerId, limit);
+          }
+        }
         break;
       case 'round_ended':
         io.to(code).emit('round:ended', { round: ev.round, scores: ev.scores });
@@ -191,6 +244,8 @@ export function registerHandlers(io: IO, socket: S) {
       const room = manager.get(currentRoom);
       if (!room) return;
 
+      stopTurnTimer(currentRoom);
+
       if (room.engine.phase === 'round_end') {
         const events = room.engine.nextRound(currentPlayer);
         emitEngineEvents(io, currentRoom, events);
@@ -210,7 +265,13 @@ export function registerHandlers(io: IO, socket: S) {
         });
       io.to(currentRoom).emit('game:started');
       const cur = room.engine.toRoomState().currentTurnPlayerId;
-      if (cur) io.to(currentRoom).emit('turn:changed', cur);
+      if (cur) {
+        io.to(currentRoom).emit('turn:changed', cur);
+        const limit = room.engine.config.turnTimeLimit;
+        if (limit > 0 && !room.engine.pendingTarget) {
+          startTurnTimer(io, currentRoom, cur, limit);
+        }
+      }
       broadcastState(io, currentRoom);
     },
   );
@@ -219,6 +280,7 @@ export function registerHandlers(io: IO, socket: S) {
     if (!guard() || !currentRoom || !currentPlayer) return;
     const room = manager.get(currentRoom);
     if (!room) return;
+    stopTurnTimer(currentRoom);
     room.engine.resetGame(currentPlayer);
     io.to(currentRoom).emit('game:reset');
     broadcastState(io, currentRoom);
@@ -228,6 +290,7 @@ export function registerHandlers(io: IO, socket: S) {
     if (!guard() || !currentRoom || !currentPlayer) return;
     const room = manager.get(currentRoom);
     if (!room) return;
+    stopTurnTimer(currentRoom);
     const events = room.engine.hit(currentPlayer);
     emitEngineEvents(io, currentRoom, events);
     broadcastState(io, currentRoom);
@@ -238,6 +301,7 @@ export function registerHandlers(io: IO, socket: S) {
     if (!guard() || !currentRoom || !currentPlayer) return;
     const room = manager.get(currentRoom);
     if (!room) return;
+    stopTurnTimer(currentRoom);
     const events = room.engine.stay(currentPlayer);
     emitEngineEvents(io, currentRoom, events);
     broadcastState(io, currentRoom);
@@ -250,6 +314,7 @@ export function registerHandlers(io: IO, socket: S) {
     if (!parsed.success) return;
     const room = manager.get(currentRoom);
     if (!room) return;
+    stopTurnTimer(currentRoom);
     const events = room.engine.applyTarget(
       currentPlayer,
       parsed.data.cardId,
@@ -296,6 +361,7 @@ export function registerHandlers(io: IO, socket: S) {
 
   socket.on('disconnect', () => {
     clear(socket.id);
+    if (currentRoom) stopTurnTimer(currentRoom);
 
     if (!currentRoom || !currentPlayer) return;
 
