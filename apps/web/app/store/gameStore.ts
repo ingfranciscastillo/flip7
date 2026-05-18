@@ -62,7 +62,9 @@ interface GameState {
   lastDealtCard: { id: string; playerId: string } | null;
   setLastDealtCard: (card: { id: string; playerId: string } | null) => void;
   turnTimeRemaining: number;
+  turnTimeOwnerId: string | null;
   setTurnTimeRemaining: (remaining: number) => void;
+  setTurnTimeOwnerId: (ownerId: string | null) => void;
 }
 
 export const useGame = create<GameState>((set) => ({
@@ -73,5 +75,7 @@ export const useGame = create<GameState>((set) => ({
   lastDealtCard: null,
   setLastDealtCard: (card) => set({ lastDealtCard: card }),
   turnTimeRemaining: 0,
+  turnTimeOwnerId: null,
   setTurnTimeRemaining: (remaining) => set({ turnTimeRemaining: remaining }),
+  setTurnTimeOwnerId: (ownerId) => set({ turnTimeOwnerId: ownerId }),
 }));

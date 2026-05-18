@@ -9,6 +9,9 @@ interface Props {
 
 export function TurnIndicator({ name, emoji, isMe }: Props) {
   const turnTimeRemaining = useGame((s) => s.turnTimeRemaining);
+  const room = useGame((s) => s.room);
+
+  const turnTimeLimit = room?.turnTimeLimit ?? 10000;
 
   return (
     <motion.div
@@ -21,7 +24,8 @@ export function TurnIndicator({ name, emoji, isMe }: Props) {
       <span className="font-semibold">
         {isMe ? '¡Es tu turno!' : `Turno de ${name}`}
       </span>
-      {isMe && turnTimeRemaining > 0 && (
+
+      {turnTimeRemaining > 0 && (
         <div className="flex items-center gap-2 ml-2">
           <div className="w-12 h-1.5 bg-surface2 rounded-full overflow-hidden">
             <div
@@ -29,7 +33,7 @@ export function TurnIndicator({ name, emoji, isMe }: Props) {
                 turnTimeRemaining <= 3000 ? 'bg-danger' : 'bg-primary'
               }`}
               style={{
-                width: `${Math.min((turnTimeRemaining / 10000) * 100, 100)}%`,
+                width: `${Math.min((turnTimeRemaining / turnTimeLimit) * 100, 100)}%`,
               }}
             />
           </div>

@@ -157,7 +157,8 @@ export function useSocketLifecycle() {
       playerId: string;
       remaining: number;
     }) => {
-      setTurnTimeRemaining(data.remaining);
+      useGame.getState().setTurnTimeRemaining(data.remaining);
+      useGame.getState().setTurnTimeOwnerId(data.playerId);
     };
 
     const onConnect = () => {

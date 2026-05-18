@@ -82,6 +82,7 @@ export const RoomStateSchema = z.object({
   discardCount: z.number().int(),
   round: z.number().int(),
   winnerId: z.string().nullable(),
+  turnTimeLimit: z.number().int().nullable().optional(),
   // For "select target" UX:
   pendingTarget: z
     .object({

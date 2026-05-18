@@ -107,7 +107,7 @@ function emitEngineEvents(io: IO, code: string, events: EngineEvent[]) {
         const turnRoom = manager.get(code);
         if (turnRoom) {
           const limit = turnRoom.engine.config.turnTimeLimit;
-          if (limit > 0 && !turnRoom.engine.pendingTarget) {
+          if (limit > 0) {
             startTurnTimer(io, code, ev.playerId, limit);
           }
         }
@@ -268,7 +268,7 @@ export function registerHandlers(io: IO, socket: S) {
       if (cur) {
         io.to(currentRoom).emit('turn:changed', cur);
         const limit = room.engine.config.turnTimeLimit;
-        if (limit > 0 && !room.engine.pendingTarget) {
+        if (limit > 0) {
           startTurnTimer(io, currentRoom, cur, limit);
         }
       }
@@ -361,7 +361,6 @@ export function registerHandlers(io: IO, socket: S) {
 
   socket.on('disconnect', () => {
     clear(socket.id);
-    if (currentRoom) stopTurnTimer(currentRoom);
 
     if (!currentRoom || !currentPlayer) return;
 

@@ -456,6 +456,7 @@ export class GameEngine {
       round: this.round,
       winnerId: this.winnerId,
       pendingTarget: this.pendingTarget,
+      turnTimeLimit: this.config.turnTimeLimit,
       players: this.players.map((p) => ({
         id: p.id,
         name: p.name,
