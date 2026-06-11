@@ -1,23 +1,29 @@
 # Flip 7 Online
 
+<!-- README-I18N:START -->
+
+**English** | [Español](./README.es.md)
+
+<!-- README-I18N:END -->
+
 [![portfolio](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://franciscode.dev/)
 [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ingfranciscastillo/)
 [![behance](https://img.shields.io/badge/behance-1769FF?style=for-the-badge&logo=behance&logoColor=white)](https://www.behance.net/ingfranciscastillo)
 [![github_stars](https://img.shields.io/github/stars/ingfranciscastillo/flip7?style=for-the-badge)](https://github.com/ingfranciscastillo/flip7)
 [![last_commit](https://img.shields.io/github/last-commit/ingfranciscastillo/flip7?style=for-the-badge)](https://github.com/ingfranciscastillo/flip7/commits)
 
-**Flip 7** es una adaptación digital del juego de cartas de mesa _Flip 7_ creado por Eric Olsen y publicado por The Op Games. Es un juego party de tipo "press-your-luck" donde los jugadores toman turnos robando cartas, intentando construir la línea más alta de puntos sin repetirlas. Con reglas simples pero estrategia profunda, cada ronda es una tensión entre arriesgar para más puntos o asegurar lo que tienes.
+**Flip 7** is a digital adaptation of the board game _Flip 7_ created by Eric Olsen and published by The Op Games. It's a "press-your-luck" party game where players take turns drawing cards, trying to build the highest scoring row without repeating any. With simple rules but deep strategy, each round is a tension between risking for more points or securing what you have.
 
-Este proyecto es un monorepo TypeScript que implementa el juego completo con sockets en tiempo real, motor de juego puro testeado, y una interfaz responsiva con animaciones.
+This project is a TypeScript monorepo that implements the complete game with real-time sockets, a fully tested pure game engine, and a responsive interface with animations.
 
 ## Features
 
-- **Multijugador en tiempo real** — Con Socket.IO, hasta 8 jugadores pueden jugar simultáneamente
-- **Sistema de feedback visual** — Anuncios animados, confetti sutil y efectos bouncy para cada acción del juego
-- **Motor de juego puro** — Lógica completamente testeada con Vitest, separada del frontend
-- **UI responsiva** — Interfaz adaptativa con Framer Motion para animaciones suaves
-- **Reconexión automática** — Si pierdes conexión, puedes reconectar sin perder tu progreso
-- **Estados de jugador** — Visualiza desconexiones y reconexiones en tiempo real
+- **Real-time multiplayer** — With Socket.IO, up to 8 players can play simultaneously
+- **Visual feedback system** — Animated announcements, subtle confetti, and bouncy effects for every game action
+- **Pure game engine** — Fully tested logic with Vitest, separated from the frontend
+- **Responsive UI** — Adaptive interface with Framer Motion for smooth animations
+- **Auto-reconnection** — If you lose connection, you can reconnect without losing your progress
+- **Player states** — View disconnections and reconnections in real time
 
 ## Tech Stack
 
@@ -39,47 +45,47 @@ Este proyecto es un monorepo TypeScript que implementa el juego completo con soc
 
 ### Packages
 
-- `@flip7/shared` — Tipos y schemas Zod para eventos socket
-- `@flip7/game-engine` — Motor de juego puro con tests
+- `@flip7/shared` — Types and Zod schemas for socket events
+- `@flip7/game-engine` — Pure game engine with tests
 
 ## Installation
 
-### Requisitos
+### Requirements
 
 - [Bun](https://bun.sh) ≥ 1.1
-- PostgreSQL (puede ser local, Docker, o Neon/Supabase)
+- PostgreSQL (can be local, Docker, or Neon/Supabase)
 
-### Desarrollo local
+### Local Development
 
 ```bash
 bun install
 
-# En terminales separadas
+# In separate terminals
 bun run dev:server
 bun run dev:web
 ```
 
-Abre http://localhost:5173 en tu navegador.
+Open http://localhost:5173 in your browser.
 
 ## Quick Start
 
-1. Abre http://localhost:5173 en tu navegador
-2. Crea una sala o únete a una existente con el código de 6 letras
-3. Invita a tus amigos (mínimo 3 jugadores para empezar)
-4. El host inicia la partida y ¡a jugar!
+1. Open http://localhost:5173 in your browser
+2. Create a room or join an existing one with the 6-letter code
+3. Invite friends (minimum 3 players to start)
+4. The host starts the game and you're ready to play!
 
-### Conexión de jugadores
+### Player Connection
 
 ```bash
-# Jugador 1: Crea sala
-1. Ingresa tu nombre y emoji
-2. Click en "Crear sala"
-3. Comparte el código con tus amigos
+# Player 1: Create room
+1. Enter your name and emoji
+2. Click "Create room"
+3. Share the code with your friends
 
-# Jugador 2, 3, N: Únete a sala
-1. Ingresa tu nombre y emoji
-2. Click en "Unirse"
-3. Ingresa el código de 6 letras
+# Player 2, 3, N: Join room
+1. Enter your name and emoji
+2. Click "Join"
+3. Enter the 6-letter code
 ```
 
 ## Architecture
@@ -124,65 +130,65 @@ flip7/
 └── README.md
 ```
 
-## Reglas Flip 7
+## Flip 7 Rules
 
-### Objetivo
+### Objective
 
-Ser el primer jugador en alcanzar **200 puntos** a lo largo de múltiples rondas.
+Be the first player to reach **200 points** across multiple rounds.
 
-### Cartas
+### Cards
 
-| Tipo                         | Descripción                                                                   |
-| ---------------------------- | ----------------------------------------------------------------------------- |
-| **Numéricas (0-12)**         | El valor de la carta es su cantidad en el mazo (hay doce 12s, once 11s, etc.) |
-| **Modificadores (+2 a +10)** | Suman puntos extra al final de la ronda                                       |
-| **×2**                       | Duplica los puntos de tus cartas numéricas                                    |
-| **Freeze**                   | Congela a un jugador, forzándolo a quedarse                                   |
-| **Flip Three**               | Obliga a un jugador a robar 3 cartas seguidas                                 |
-| **Second Chance**            | Te salva de un bust si obtienes un duplicado                                  |
+| Type                      | Description                                                                        |
+| ------------------------- | ---------------------------------------------------------------------------------- |
+| **Number cards (0-12)**   | The card's value is its count in the deck (there are twelve 12s, eleven 11s, etc.) |
+| **Modifiers (+2 to +10)** | Add extra points at the end of the round                                           |
+| **×2**                    | Doubles the points from your number cards                                          |
+| **Freeze**                | Freezes a player, forcing them to stay                                             |
+| **Flip Three**            | Forces a player to draw 3 cards in a row                                           |
+| **Second Chance**         | Saves you from a bust if you get a duplicate                                       |
 
-### Cómo jugar
+### How to Play
 
-1. **En tu turno**: Elige **Hit** (robar otra carta) o **Stay** (asegurar puntos)
-2. **Bust**: Si robas una carta con el mismo número que ya tienes, pierdes todo para esa ronda
-3. **Flip 7**: Si obtienes 7 cartas numéricas únicas, ganas +15 puntos de bonus y termina la ronda
-4. **Gana**: El jugador con más puntos al final de la ronda suma su total. El primero en llegar a 200 gana.
+1. **On your turn**: Choose **Hit** (draw another card) or **Stay** (secure your points)
+2. **Bust**: If you draw a card with the same number you already have, you lose everything for that round
+3. **Flip 7**: If you get 7 unique number cards, you win +15 bonus points and the round ends
+4. **Winner**: The player with the most points at the end of the round adds their total. First to reach 200 wins.
 
-### Condiciones de fin de ronda
+### Round End Conditions
 
-- Todos los jugadores activos se plantan o hacen bust
-- Un jugador logra Flip 7 (7 cartas numéricas únicas)
+- All active players stay or bust
+- A player achieves Flip 7 (7 unique number cards)
 
-### Condiciones de fin de juego
+### Game End Conditions
 
-- Al menos un jugador alcanza 200 puntos al final de una ronda
-- El jugador con más puntos totales gana
+- At least one player reaches 200 points at the end of a round
+- The player with the most total points wins
 
 ## Smoke Test
 
-1. `bun run dev:server` y `bun run dev:web`
-2. Abre dos pestañas en http://localhost:5173
-3. Crea sala en una, copia el código, únete desde la otra
-4. Inicia partida (mínimo 3 jugadores → puedes abrir más pestañas)
+1. `bun run dev:server` and `bun run dev:web`
+2. Open two tabs at http://localhost:5173
+3. Create a room in one, copy the code, join from the other
+4. Start the game (minimum 3 players → you can open more tabs)
 
-## Variables de entorno
+## Environment Variables
 
-Ver `.env.example`.
+See `.env.example`.
 
-| Variable          | Donde  | Descripción                |
+| Variable          | Where  | Description                |
 | ----------------- | ------ | -------------------------- |
-| `PORT`            | server | Puerto HTTP                |
-| `CORS_ORIGIN`     | server | Origen permitido (web)     |
+| `PORT`            | server | HTTP port                  |
+| `CORS_ORIGIN`     | server | Allowed origin (web)       |
 | `DATABASE_URL`    | server | Postgres connection string |
-| `VITE_SERVER_URL` | web    | URL del Socket.IO server   |
+| `VITE_SERVER_URL` | web    | Socket.IO server URL       |
 
-## Despliegue sugerido
+## Suggested Deployment
 
-- **Web** → Vercel / Netlify (build estático Vite)
-- **Server** → Railway / Fly.io (necesita websockets persistentes)
+- **Web** → Vercel / Netlify (Vite static build)
+- **Server** → Railway / Fly.io (needs persistent websockets)
 - **Postgres** → Neon / Railway / Supabase
 
-Configura `VITE_SERVER_URL` en el host del web apuntando al server público.
+Set `VITE_SERVER_URL` on the web host pointing to the public server.
 
 ## License
 
@@ -190,7 +196,7 @@ MIT License
 
 ## Acknowledgments
 
-- **Flip 7** creado por Eric Olsen y publicado por [The Op Games](https://theopgames.com/)
-- **Stack tecnológico**: React, Vite, Tailwind CSS, Zustand, Framer Motion, Socket.IO, Express, Drizzle ORM
-- **Fonts**: Bangers y Fredoka de Google Fonts
+- **Flip 7** created by Eric Olsen and published by [The Op Games](https://theopgames.com/)
+- **Tech stack**: React, Vite, Tailwind CSS, Zustand, Framer Motion, Socket.IO, Express, Drizzle ORM
+- **Fonts**: Bangers and Fredoka from Google Fonts
 - **Icons**: Hugeicons
